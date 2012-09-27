@@ -7,8 +7,9 @@
 ;;Some basic config options
 
 ;No splash screen at start-up
-(inhibit-startup-screen t)
+(setq inhibit-startup-screen t)
 
 ; Save space
-(menu-bar-mode nil)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
 
