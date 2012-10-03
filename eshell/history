@@ -18,3 +18,4 @@ cat tramp
 find-file .gitignore 
 git status
 git diff
+ls *
