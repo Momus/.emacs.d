@@ -4,8 +4,11 @@
 ;; add the directory in which are kept various elsips loaded below.
 (add-to-list 'load-path "~/.emacs.d/elisp")
 
-;; Load the org mode configuration
+;; Org mode configuration
 (load "my_org")
+;; All ruby stuff
+(load "rubies")
+
 
 
 ;;Some basic config options

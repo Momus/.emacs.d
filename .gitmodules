@@ -1,0 +1,3 @@
+[submodule "elisp/external/rvm.el"]
+	path = elisp/external/rvm.el
+	url = https://github.com/senny/rvm.el.git
