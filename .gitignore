@@ -4,3 +4,5 @@ session*
 *\~
 .#*
 tramp*
+eshell/history*
+eshell/lastdir*
