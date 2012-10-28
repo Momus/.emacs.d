@@ -6,9 +6,12 @@
 
 ;; Org mode configuration
 (load "my_org")
+
 ;; All ruby stuff
 (load "rubies")
 
+;;Git!
+(load "gits")
 
 
 ;;Some basic config options
