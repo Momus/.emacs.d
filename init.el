@@ -4,6 +4,10 @@
 ;; add the directory in which are kept various elsips loaded below.
 (add-to-list 'load-path "~/.emacs.d/elisp")
 
+;; ido-mode iX TeH BomB
+(require 'ido)
+(ido-mode t)
+
 ;; Org mode configuration
 (load "my_org")
 
