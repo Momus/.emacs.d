@@ -29,8 +29,10 @@
 ;No splash screen at start-up
 (setq inhibit-startup-screen t)
 
+;Leave on the training wheels for a while longer
+;(menu-bar-mode -1)
+
 ; Save space
-(menu-bar-mode -1)
 (tool-bar-mode -1)
 
 
