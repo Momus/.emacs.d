@@ -30,11 +30,21 @@
 (setq inhibit-startup-screen t)
 
 ;Leave on the training wheels for a while longer
-;(menu-bar-mode -1)
+(menu-bar-mode 1)
 
 ; Save space
 (tool-bar-mode -1)
 
+
+;;With Emacs 24 some package management goodies
+;; AKA  ELPA
+(require 'package)
+(add-to-list 'package-archives
+  '("marmalade" . "http://marmalade-repo.org/packages/"))
+;; You don't need this one if you have marmalade:
+;; (add-to-list 'package-archives
+;;  '("geiser" . "http://download.savannah.gnu.org/releases/geiser/packages"))
+(package-initialize)
 
 ;; When I configure more eshell stuff, it will get it's own file
 
