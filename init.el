@@ -17,6 +17,9 @@
 ;;Git!
 (load "gits")
 
+;;Eshell!
+(load "eshell")
+
 
 ;;Some basic config options
 
