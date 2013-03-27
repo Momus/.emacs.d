@@ -1,6 +1,15 @@
 ;; This is the main init file.  It should get split up as it gets bigger.
 
 
+;;Autocomplete
+;;From http://cx4a.org/software/auto-complete/
+;;(add-to-list 'load-path "~/.emacs.d/")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
+(ac-config-default)
+
+
+
 ;; add the directory in which are kept various elsips loaded below.
 (add-to-list 'load-path "~/.emacs.d/elisp")
 
