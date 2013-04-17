@@ -27,7 +27,7 @@
 (load "gits")
 
 ;;Eshell!
-;;(load "eshell")
+(load "my_eshell")
 
 
 ;;Some basic config options
