@@ -1,6 +1,9 @@
 ;; This is the main init file.  It should get split up as it gets bigger.
 
 
+;;My custom bindings go first so I know what they are and what they do.
+(global-set-key (kbd "C-x g") 'magit-status)
+
 ;;Autocomplete
 ;;From http://cx4a.org/software/auto-complete/
 ;;(add-to-list 'load-path "~/.emacs.d/")
@@ -47,6 +50,10 @@
 ; Save space
 (tool-bar-mode -1)
 
+; Get rid of autofill. Fly fill worls much better.
+(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+(auto-fill-mode -1)
+ 
 
 ;;With Emacs 24 some package management goodies
 ;; AKA  ELPA
