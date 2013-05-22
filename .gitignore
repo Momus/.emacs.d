@@ -8,3 +8,5 @@ eshell/history*
 eshell/lastdir*
 /desktops/.emacs.desktop
 /desktops/.emacs.desktop.lock
+.smex-items
+places

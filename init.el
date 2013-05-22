@@ -51,9 +51,14 @@
 (tool-bar-mode -1)
 
 ; Get rid of autofill. Fly fill worls much better.
-(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+(remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (auto-fill-mode -1)
  
+; Winner Mode Wins!
+(setq winner-mode t)
+
+;;How about a nice clock?
+(setq display-time t)
 
 ;;With Emacs 24 some package management goodies
 ;; AKA  ELPA
