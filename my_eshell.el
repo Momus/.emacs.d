@@ -2,8 +2,10 @@
 ;;Some useful eshell settings
 
 ;;This is so ehshell finds our alias files.
-;;(setenv 'Eshell-directory-name "~/.emacs.d/eshell")
+(setq eshell-directory-name "~/.emacs.d/eshell") 
 
-;;(senv "Eshell-directory-name" "~/.emacs.d/eshell")
+;;This will fix crashing problems
+(setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
 
-;; (setq eshell-directory-name "~/.emacs.d/eshell")
+;;  pcomplete-list better than the completion cycling. 
+ (setq eshell-cmpl-cycle-completions nil)
