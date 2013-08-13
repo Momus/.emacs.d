@@ -1,21 +1,23 @@
 
 ;; ----- smex-history -----
 (
+ eshell
+ menu-bar-mode
+ customize-face
  desktop-save
  make-directory
  org-mode
  org-preview-latex-fragment
- auto-fill-mode
- eshell
- cd
 )
 
 ;; ----- smex-data -----
 (
- (eshell . 3)
+ (eshell . 4)
  (org-preview-latex-fragment . 18)
  (auto-fill-mode . 1)
  (org-mode . 1)
  (desktop-save . 2)
  (make-directory . 1)
+ (menu-bar-mode . 2)
+ (customize-face . 2)
 )

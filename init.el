@@ -16,7 +16,7 @@
 ;; add the directory in which are kept various elsips loaded below.
 (add-to-list 'load-path "~/.emacs.d/elisp")
 
-;; ido-mode iX TeH BomB
+;; ido-mode iZ TeH BomB
 (require 'ido)
 (ido-mode t)
 
@@ -51,8 +51,10 @@
 (tool-bar-mode -1)
 
 ; Get rid of autofill. Fly fill worls much better.
+;;Visual line mode 
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (auto-fill-mode -1)
+(turn-off-auto-fill)
  
 ; Winner Mode Wins!
 (setq winner-mode t)

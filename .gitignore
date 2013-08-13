@@ -10,3 +10,5 @@ eshell/lastdir*
 /desktops/.emacs.desktop.lock
 .smex-items
 places
+elpa/*
+url/*
