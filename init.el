@@ -52,10 +52,33 @@
 
 ; Get rid of autofill. Fly fill worls much better.
 ;;Visual line mode 
+(global-visual-line-mode 1)
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (auto-fill-mode -1)
 (turn-off-auto-fill)
- 
+(set-fringe-mode '(0 . 0)); Disable fringe for  visual-line-mode
+
+
+;;; AUCTeX
+;; Customary Customization, p. 1 and 16 in the manual, and http://www.emacswiki.org/emacs/AUCTeX#toc2
+(setq TeX-parse-self t); Enable parse on load.
+(setq TeX-auto-save t); Enable parse on save.
+(setq-default TeX-master nil)
+
+(setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
+
+(add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
+(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
+(add-hook 'TeX-mode-hook
+          (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
+;;; RefTeX
+;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
+(add-hook 'TeX-mode-hook 'turn-on-reftex)
+
+
+
+
+
 ; Winner Mode Wins!
 (setq winner-mode t)
 
