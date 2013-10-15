@@ -12,3 +12,4 @@ eshell/lastdir*
 places
 elpa/*
 url/*
+ac-comphist.dat
