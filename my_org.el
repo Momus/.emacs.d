@@ -30,8 +30,7 @@
 (define-key global-map "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-;;This is where my main agenda files should be kept
-(custom-set-variables
- '(org-agenda-files (quote ("~/repos/projects/TODO.org"))))
-(custom-set-variables
- '(org-agenda-files (quote ("~/repos/projects/org"))))
+;;The location of the agenda files should be specified in .emacs , since it will be different for each computer, e. g.:
+;(setq org-agenda-files (quote ("~/repos/projects/org"
+;                               "~/repos/projects/TODO.org"
+;                               )))
