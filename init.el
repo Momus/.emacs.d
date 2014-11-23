@@ -32,6 +32,14 @@
 ;;Eshell!
 (load "my_eshell")
 
+;; We like desktop save mode, however, it is a bad idea to keep saved
+;; desktops in a git repository.  So while it is enabled, make sure that
+;; the desktop directory is in git ignore
+
+(desktop-save-mode 1)
+(add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
+
+
 
 ;;Some basic config options
 
@@ -57,6 +65,8 @@
 (auto-fill-mode -1)
 (turn-off-auto-fill)
 (set-fringe-mode '(0 . 0)); Disable fringe for  visual-line-mode
+
+;;Transparent Emacs!!!
 
 
 ;;; AUCTeX
