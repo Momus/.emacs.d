@@ -1,4 +1,6 @@
-;; This is the main init file.  It should get split up as it gets bigger.
+;; This is the main init file.  Other init files live in the elisp directory
+
+(add-to-list 'load-path "~/.emacs.d/elisp/")
 
 
 ;;My custom bindings go first so I know what they are and what they do.
@@ -6,15 +8,10 @@
 
 ;;Autocomplete
 ;;From http://cx4a.org/software/auto-complete/
-;;(add-to-list 'load-path "~/.emacs.d/")
+
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
-
-
-
-;; add the directory in which are kept various elsips loaded below.
-(add-to-list 'load-path "~/.emacs.d/elisp")
 
 ;; ido-mode iZ TeH BomB
 (require 'ido)
@@ -63,8 +60,8 @@
 ;No splash screen at start-up
 (setq inhibit-startup-screen t)
 
-;;;Leave on the training wheels for a while longer
-;;(menu-bar-mode 0)
+;;;Take off  the training wheels for a while longer
+(menu-bar-mode -1)
 
 ; Save space
 (tool-bar-mode -1)
@@ -77,7 +74,7 @@
 (turn-off-auto-fill)
 (set-fringe-mode '(0 . 0)); Disable fringe for  visual-line-mode
 
-;;Transparent Emacs!!!
+
 
 
 ;;; AUCTeX
@@ -116,7 +113,6 @@
 ;;  '("geiser" . "http://download.savannah.gnu.org/releases/geiser/packages"))
 (package-initialize)
 
-;; When I configure more eshell stuff, it will get it's own file
 
 ; TODO:   em-last.el --- insert arguments from previous commands
 ;;(add-to-list 'eshell-modules-list "eshell-last")

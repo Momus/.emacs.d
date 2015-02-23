@@ -1,8 +1,5 @@
 auto-save-list
 session*
-\#*
-*\~
-.#*
 tramp*
 eshell/history*
 eshell/lastdir*
@@ -17,3 +14,5 @@ ac-comphist.dat
 bookmarks
 org-clock-save.el
 eww-bookmarks
+ido.last
+*backup*
