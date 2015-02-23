@@ -103,16 +103,12 @@
 ;;How about a nice clock?
 (setq display-time t)
 
-;;With Emacs 24 some package management goodies
-;; AKA  ELPA
+
+
 (require 'package)
 (add-to-list 'package-archives
-  '("marmalade" . "http://marmalade-repo.org/packages/"))
-;; You don't need this one if you have marmalade:
-;; (add-to-list 'package-archives
-;;  '("geiser" . "http://download.savannah.gnu.org/releases/geiser/packages"))
-(package-initialize)
-
-
-; TODO:   em-last.el --- insert arguments from previous commands
-;;(add-to-list 'eshell-modules-list "eshell-last")
+             '("melpa" . "http://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize) 
