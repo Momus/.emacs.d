@@ -1,5 +1,6 @@
-alias gst git status
-alias gstat git status
-alias d dired .
-alias emacs find-file $1
+alias ll ls -hl $*
+alias la ls -hla $*
 alias ff find-file $1
+alias emacs find-file $1
+alias d dired .
+alias gst git status

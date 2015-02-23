@@ -32,12 +32,23 @@
 ;;Eshell!
 (load "my_eshell")
 
+;;Window number!
+(load "window_number")
+(require 'window-number)
+(window-number-mode 1)
+
 ;; We like desktop save mode, however, it is a bad idea to keep saved
 ;; desktops in a git repository.  So while it is enabled, make sure that
 ;; the desktop directory is in git ignore
 
 (desktop-save-mode 1)
 (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
+(global-set-key "\C-xo"  'window-number-switch)
+
+;;This should make it possible to edit Chrome text areas with Emacs.
+;; Not yet convinced of its utility.
+(require 'edit-server)
+(edit-server-start)
 
 
 
@@ -52,8 +63,8 @@
 ;No splash screen at start-up
 (setq inhibit-startup-screen t)
 
-;Leave on the training wheels for a while longer
-(menu-bar-mode 1)
+;;;Leave on the training wheels for a while longer
+;;(menu-bar-mode 0)
 
 ; Save space
 (tool-bar-mode -1)
