@@ -37,20 +37,3 @@
      ;   (require 'ruby-electric)
      ;   (ruby-electric-mode t)
         ))
-
-;; Require ruby-block.el  -- highlight matching block
-;; http://www.emacswiki.org/emacs/ruby-block.el
-
-;(require 'ruby-block)
-;(ruby-block-mode t)
-
-; In addition, you can also add this line too.
-;;
-;; ;; do overlay
-;; (setq ruby-block-highlight-toggle 'overlay)
-;; ;; display to minibuffer
-;; (setq ruby-block-highlight-toggle 'minibuffer)
-;; ;; display to minibuffer and do overlay
-;(setq ruby-block-highlight-toggle t)
-;;
-;; Default is minibuffer.
