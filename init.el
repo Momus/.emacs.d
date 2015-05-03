@@ -78,7 +78,9 @@
 
 
 ;;; AUCTeX
-;; Customary Customization, p. 1 and 16 in the manual, and http://www.emacswiki.org/emacs/AUCTeX#toc2
+;; Customary Customization, p. 1 and 16 in the manual
+;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
+
 (setq TeX-parse-self t); Enable parse on load.
 (setq TeX-auto-save t); Enable parse on save.
 (setq-default TeX-master nil)
@@ -89,6 +91,7 @@
 (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
 (add-hook 'TeX-mode-hook
           (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
+
 ;;; RefTeX
 ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
 (add-hook 'TeX-mode-hook 'turn-on-reftex)
