@@ -3,6 +3,11 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 
+;; Also needed for the elpa dirs to work
+(require 'package)
+(package-initialize)
+
+
 ;;My custom bindings go first so I know what they are and what they do.
 (global-set-key (kbd "C-x g") 'magit-status)
 
@@ -72,7 +77,7 @@
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (auto-fill-mode -1)
 (turn-off-auto-fill)
-(set-fringe-mode '(0 . 0)); Disable fringe for  visual-line-mode
+(set-fringe-mode '(0 . 0)) ; Disable fringe for  visual-line-mode
 
 
 
