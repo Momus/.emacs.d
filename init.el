@@ -73,8 +73,9 @@
 
 ; Get rid of autofill. Fly fill worls much better.
 ;;Visual line mode 
-(global-visual-line-mode 1)
+;(global-visual-line-mode 1)
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
+(add-hook 'text-mode-hook' #'visual-line-mode)
 (auto-fill-mode -1)
 (turn-off-auto-fill)
 (set-fringe-mode '(0 . 0)) ; Disable fringe for  visual-line-mode
@@ -105,12 +106,35 @@
 
 
 
-; Winner Mode Wins!
-(setq winner-mode t)
+;; Winner Mode Wins!
+(when (fboundp 'winner-mode) ;Compat test
+      (winner-mode 1))
+
+;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
+;; have winner-mode.
+
 
 ;;How about a nice clock?
-(setq display-time t)
 
+(defface egoge-display-time
+   '((((type x w32 mac))
+      ;; #060525 is the background colour of my default face.
+      (:foreground "#060525" :inherit bold))
+     (((type tty))
+      (:foreground "blue")))
+   "Face used to display the time in the mode line.")
+
+;; This causes the current time in the mode line to be displayed in
+;; `egoge-display-time-face' to make it stand out visually.
+;; Clock is set to 24 hour mode and two | to act as separators with
+;; the system load indicator
+
+(setq display-time-string-forms
+      '((propertize (concat 24-hours ":" minutes"\|"load"\|")
+ 		    'face 'egoge-display-time)))
+
+;; This line has to be under the two functions above.  Execution order matters in Elisp.
+(display-time-mode 1)
 
 
 (require 'package)
