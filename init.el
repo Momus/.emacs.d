@@ -130,7 +130,7 @@
 ;; the system load indicator
 
 (setq display-time-string-forms
-      '((propertize (concat " " 24-hours ":" minutes" \|"load"\|")
+      '((propertize (concat 24-hours":"minutes"\|"load"\|")
  		    'face 'egoge-display-time)))
 
 ;; This line has to be under the two functions above.  Execution order matters in Elisp.
