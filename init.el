@@ -71,14 +71,14 @@
 ; Save space
 (tool-bar-mode -1)
 
-; Get rid of autofill. Fly fill worls much better.
+;; Get rid of autofill. Fly fill works much better.
 ;;Visual line mode 
 ;(global-visual-line-mode 1)
-(remove-hook 'text-mode-hook #'turn-on-auto-fill)
-(add-hook 'text-mode-hook' #'visual-line-mode)
-(auto-fill-mode -1)
-(turn-off-auto-fill)
-(set-fringe-mode '(0 . 0)) ; Disable fringe for  visual-line-mode
+;; (remove-hook 'text-mode-hook #'turn-on-auto-fill)
+;; (add-hook 'text-mode-hook' #'visual-line-mode)
+;; (auto-fill-mode -1)
+;; (turn-off-auto-fill)
+;; (set-fringe-mode '(0 . 0)) ; Disable fringe for  visual-line-mode
 
 
 

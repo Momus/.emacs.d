@@ -13,10 +13,10 @@
 
 ;; Setting the  vis line mode
 ;;Dedided that vis line mode not such a good idea with org mode.  Messes up the nice columns.  
-;(add-hook 'org-mode-hook
-;	  '(lambda ()
-;	     (auto-fill-mode nil)
-;	     (visual-line-mode t)))
+;; (add-hook 'org-mode-hook                
+;; 	  '(lambda ()
+;; 	     (auto-fill-mode t)
+;; 	     (visual-line-mode nil)))
 
 ;;Org Mode - Organize Your Life In Plain Text!
 ;;http://doc.norang.ca/org-mode.html#Setup
