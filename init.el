@@ -3,13 +3,20 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 
+;;Test first!
+(require
+ 'ert)
+
 ;; Also needed for the elpa dirs to work
 (require 'package)
 (package-initialize)
 
 
-;;My custom bindings go first so I know what they are and what they do.
+;;My custom bindings go on top, so I know what they are and what they do.
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x e") 'ert)
+(global-set-key (kbd "C-x c") 'auto-complete)
+
 
 ;;Autocomplete
 ;;From http://cx4a.org/software/auto-complete/
@@ -17,6 +24,11 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
+
+;;We need ESS, currently it is on the system. This may change
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/ess/")
+(load "ess-site")
+
 
 ;; ido-mode iZ TeH BomB
 (require 'ido)
