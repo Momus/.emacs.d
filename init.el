@@ -7,15 +7,15 @@
 (require
  'ert)
 
-;; Also needed for the elpa dirs to work
-(require 'package)
-(package-initialize)
-
 
 ;;My custom bindings go on top, so I know what they are and what they do.
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x e") 'ert)
 (global-set-key (kbd "C-x c") 'auto-complete)
+
+;; Also needed for the elpa dirs to work
+(require 'package)
+(package-initialize)
 
 
 ;;Autocomplete
@@ -33,6 +33,11 @@
 ;; ido-mode iZ TeH BomB
 (require 'ido)
 (ido-mode t)
+
+
+;; R/ESS does not have own file yet
+(require 'ob-R) ;evaluate R in org-mode
+
 
 ;; Org mode configuration
 (load "my_org")
