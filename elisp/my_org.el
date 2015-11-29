@@ -33,6 +33,26 @@
 (define-key global-map "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
+
+;; Remember mode setup inspired by
+;; [[http://sachachua.com/blog/2007/12/emacs-getting-things-done-with-org-basic/][Sacha Chua]]
+(require 'remember)
+;;(require 'remember-autoloads) ;;doesn't work
+(setq org-remember-templates
+      '(("Tasks" ?t "* TODO %?\n  %i\n  %a" "~/organizer.org")                      ;; (2)
+        ("Appointments" ?a "* Appointment: %?\n%^T\n%i\n  %a" "~/organizer.org")))
+(setq remember-annotation-functions '(org-remember-annotation))
+(setq remember-handler-functions '(org-remember-handler))
+(eval-after-load 'remember
+   '(add-hook 'remember-mode-hook 'org-remember-apply-template))
+
+
+;;More Sacha customization's
+(setq org-todo-keywords '("TODO" "STARTED" "WAITING" "DONE"))
+(setq org-agenda-include-diary t)
+(setq org-agenda-include-all-todo t)
+
+
 ;;The location of the agenda files should be specified in .emacs , since it will be different for each computer, e. g.:
 ;(setq org-agenda-files (quote ("~/repos/projects/org"
 ;                               "~/repos/projects/TODO.org"

@@ -1,4 +1,3 @@
-
 ;; Load rvm.el
 (require 'rvm)
 ;; use rvm’s default ruby for the current Emacs session
@@ -10,6 +9,19 @@
 
 (add-hook 'ruby-mode-hook
           (lambda () (rvm-activate-corresponding-ruby)))
+
+
+;; Stolen from https://rejeep.github.io/emacs/elisp/ruby/2010/11/10/ruby-interpolation.html
+;; Could be more useful; also needs a good key-binding
+(defun ruby-interpolate ()
+  "In a double quoted string, interpolate."
+  (interactive)
+  (insert "#")
+  (when (and
+         (looking-back "\".*")
+         (looking-at ".*\""))
+    (insert "{}")
+    (backward-char 1)))
 
 
 ;;; Rinari
@@ -32,31 +44,3 @@
    '(("css" . (ac-source-css-property))
      ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
 
-
-;;; OLD Hopefully Rinari will take care of this
-   ;;Improving Ruby Mode
-   
-   ;;Ruby-mode file associations:
-   ;;http://stackoverflow.com/questions/13165811/enabling-ruby-mode-for-sundry-rails-files
-                                        ;(add-to-list 'auto-mode-alist '("\\.\\(rb\\|ru\\|builder\\|rake\\|thor\\|gemspec\\)\\'" . ruby-mode))
-                                        ;(add-to-list 'auto-mode-alist '("\\(rake\\|thor\\|guard\\|gem\\|cap\\|vagrant\\)file\\'" . ruby-mode))
-
-
-                                        ; auto-indent the next line after you hit return
-                                        ;http://appsintheopen.com/articles/1-setting-up-emacs-for-rails-development/part/7-emacs-ruby-foo
-   
-;; (add-hook 'ruby-mode-hook
-;;       (lambda()
-;;         (add-hook 'local-write-file-hooks
-;;                   '(lambda()
-;;                      (save-excursion
-;;                        (untabify (point-min) (point-max))
-;;                        (delete-trailing-whitespace)
-;;                        )))
-;;         (set (make-local-variable 'indent-tabs-mode) 'nil)
-;;         (set (make-local-variable 'tab-width) 2)
-;;         (imenu-add-to-menubar "IMENU")
-;;         (define-key ruby-mode-map "\C-m" 'newline-and-indent) ;Not sure if this line is 100% right!
-;;      ;   (require 'ruby-electric)
-;;      ;   (ruby-electric-mode t)
-;;         ))

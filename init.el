@@ -10,8 +10,9 @@
 
 ;;My custom bindings go on top, so I know what they are and what they do.
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-x e") 'ert)
+(global-set-key (kbd "C-x e") 'ert) ;Testing for ESS
 (global-set-key (kbd "C-x c") 'auto-complete)
+(global-set-key (kbd "C-c r") 'remember)
 
 ;; Also needed for the elpa dirs to work
 (require 'package)
@@ -55,6 +56,9 @@
 (load "window_number")
 (require 'window-number)
 (window-number-mode 1)
+;; Remaps the default window switch key to use window-number mode
+(global-set-key "\C-xo"  'window-number-switch)
+
 
 ;; We like desktop save mode, however, it is a bad idea to keep saved
 ;; desktops in a git repository.  So while it is enabled, make sure that
@@ -62,7 +66,9 @@
 
 (desktop-save-mode 1)
 (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
-(global-set-key "\C-xo"  'window-number-switch)
+
+
+
 
 ;;This should make it possible to edit Chrome text areas with Emacs.
 ;; Not yet convinced of its utility.
@@ -118,9 +124,6 @@
 ;;; RefTeX
 ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
 (add-hook 'TeX-mode-hook 'turn-on-reftex)
-
-
-
 
 
 ;; Winner Mode Wins!
