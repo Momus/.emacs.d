@@ -47,6 +47,26 @@
    '(add-hook 'remember-mode-hook 'org-remember-apply-template))
 
 
+
+;;[[http://orgmode.org/worg/org-gtd-etc.html][Pomodoro in Org]]
+;; Start a clock to work on task.
+;; http://thread.gmane.org/gmane.emacs.orgmode/29347
+
+(add-to-list 'org-modules 'org-timer)
+
+;; Set a default value for the timer.
+(setq org-timer-default-timer 25)
+
+;; Modify the org-clock-in so that a timer is started with the default
+;; value except if a timer is already started:
+
+(add-hook 'org-clock-in-hook
+          (lambda ()
+            (if (not org-timer-current-timer)
+                (org-set-timer '(16)))))
+
+
+
 ;;More Sacha customization's
 (setq org-todo-keywords '("TODO" "STARTED" "WAITING" "DONE"))
 (setq org-agenda-include-diary t)
