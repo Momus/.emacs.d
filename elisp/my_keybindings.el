@@ -16,6 +16,8 @@
 ;; Switch to any org buffers:
 (global-set-key "\C-cb" 'org-iswitchb)
 
+;; Capture!
+(define-key global-map "\C-cc" 'org-capture)
 
 ;;WTF?
 (define-key global-map "\C-cl" 'org-store-link)
