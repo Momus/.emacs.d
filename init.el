@@ -2,17 +2,16 @@
 
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
+;; All global key bindings go in ./elisp/my_keybindings.el
+;; So as to form a more prefect cheat-sheet
+(load "my_keybindings")
 
 ;;Test first!
 (require
  'ert)
 
 
-;;My custom bindings go on top, so I know what they are and what they do.
-(global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-x e") 'ert) ;Testing for ESS
-(global-set-key (kbd "C-x c") 'auto-complete)
-(global-set-key (kbd "C-c r") 'remember)
+
 
 ;; Also needed for the elpa dirs to work
 (require 'package)
@@ -68,13 +67,9 @@
 (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
 
 
-
-
-;;This should make it possible to edit Chrome text areas with Emacs.
-;; Not yet convinced of its utility.
+;;Edit browser text-areas with Emacs!
 (require 'edit-server)
 (edit-server-start)
-
 
 
 ;;Some basic config options
@@ -93,18 +88,6 @@
 
 ; Save space
 (tool-bar-mode -1)
-
-;; Get rid of autofill. Fly fill works much better.
-;;Visual line mode 
-;(global-visual-line-mode 1)
-;; (remove-hook 'text-mode-hook #'turn-on-auto-fill)
-;; (add-hook 'text-mode-hook' #'visual-line-mode)
-;; (auto-fill-mode -1)
-;; (turn-off-auto-fill)
-;; (set-fringe-mode '(0 . 0)) ; Disable fringe for  visual-line-mode
-
-
-
 
 ;;; AUCTeX
 ;; Customary Customization, p. 1 and 16 in the manual
@@ -138,7 +121,6 @@
 
 (defface egoge-display-time
    '((((type x w32 mac))
-      ;; #060525 is the background colour of my default face.
       (:foreground "#060525" :inherit bold))
      (((type tty))
       (:foreground "blue")))
@@ -169,6 +151,8 @@
 ;; Going to give this:
 ;; http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
 ;; a try.
+;; (global-set-key (kbd "C-x C-r") 'sudo-edit)
+
 
 (defun sudo-edit (&optional arg)
   "Edit currently visited file as root.
@@ -182,4 +166,4 @@ buffer is not visiting a file."
                          (ido-read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-(global-set-key (kbd "C-x C-r") 'sudo-edit)
+

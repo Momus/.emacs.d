@@ -1,50 +1,28 @@
-;;  Initial configuration taken from 
-;;  http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html
-
-(require 'org-install)
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-
-(setq org-log-done t)
+;; Enabled by default in newer Emacs, but can't hurt just the same,
+;; Necessary for org-mode
 (global-font-lock-mode 1)
 
+;; Only required on older versions of Emacs:
+;; Org mode is now built in.
+;; (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+;; (require 'org-install)
+(require 'org)
 
-;; Odd levels, lets see if this is the way to go.
+
+;; Odd levels by default to keep from clutter.
+;; Also, odd numbers are better luck they say.
 (setq org-odd-levels-only 1)
 
-;; Setting the  vis line mode
-;;Dedided that vis line mode not such a good idea with org mode.  Messes up the nice columns.  
-;; (add-hook 'org-mode-hook                
-;; 	  '(lambda ()
-;; 	     (auto-fill-mode t)
-;; 	     (visual-line-mode nil)))
+;; Speaking of clutter, can't live without
+(setq org-indent-mode t)
 
 ;;Org Mode - Organize Your Life In Plain Text!
 ;;http://doc.norang.ca/org-mode.html#Setup
 
-;; If I ever start using the org-mode github source, uncoment next line:
-;;(add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-(require 'org)
+;; Remember; _global_ keybindings are found in ./elisp/my_keybindings.el
+;; 
 
-;;
-;; Standard key bindings
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-
-
-;; Remember mode setup inspired by
-;; [[http://sachachua.com/blog/2007/12/emacs-getting-things-done-with-org-basic/][Sacha Chua]]
-(require 'remember)
-;;(require 'remember-autoloads) ;;doesn't work
-(setq org-remember-templates
-      '(("Tasks" ?t "* TODO %?\n  %i\n  %a" "~/organizer.org")                      ;; (2)
-        ("Appointments" ?a "* Appointment: %?\n%^T\n%i\n  %a" "~/organizer.org")))
-(setq remember-annotation-functions '(org-remember-annotation))
-(setq remember-handler-functions '(org-remember-handler))
-(eval-after-load 'remember
-   '(add-hook 'remember-mode-hook 'org-remember-apply-template))
 
 
 
@@ -66,14 +44,13 @@
                 (org-set-timer '(16)))))
 
 
+;; The location of the agenda files should be specified in .emacs,
+;; since it will be different for each computer, e. g.:
+;; (setq org-agenda-files (quote ("~/repos/projects/org"
+;;                               "~/repos/projects/TODO.org"
+;;                               )))
 
-;;More Sacha customization's
-(setq org-todo-keywords '("TODO" "STARTED" "WAITING" "DONE"))
-(setq org-agenda-include-diary t)
-(setq org-agenda-include-all-todo t)
 
+;; Capture time stamps when TODO states changes.
 
-;;The location of the agenda files should be specified in .emacs , since it will be different for each computer, e. g.:
-;(setq org-agenda-files (quote ("~/repos/projects/org"
-;                               "~/repos/projects/TODO.org"
-;                               )))
+(setq org-log-done 'time) ;Insert time stamp when DONE
