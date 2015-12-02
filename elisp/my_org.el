@@ -7,6 +7,7 @@
 ;; (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 ;; (require 'org-install)
 (require 'org)
+(require 'org-agenda)
 
 
 ;; Odd levels by default to keep from clutter.
@@ -19,7 +20,7 @@
 
 
 ;; Remember; _global_ keybindings are found in ./elisp/my_keybindings.el
-;; 
+;;
 
 ;; Set up Capture mode to replace remember mode
 (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -45,19 +46,29 @@
        #'(lambda nil (interactive) (org-todo "STARTED")))
      (define-key org-todo-state-map "w"
        #'(lambda nil (interactive) (org-todo "WAITING")))
-
      (define-key org-agenda-mode-map "\C-n" 'next-line)
      (define-key org-agenda-keymap "\C-n" 'next-line)
      (define-key org-agenda-mode-map "\C-p" 'previous-line)
-     (define-key org-agenda-keymap "\C-p" 'previous-line)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;(require 'remember)
-;;(add-hook 'remember-mode-hook 'org-remember-apply-template)
-;;(define-key global-map [(control meta ?r)] 'remember)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     (define-key org-agenda-keymap "\C-p" 'previous-line)
+     )
+  )
+
+;; ;;https://lists.gnu.org/archive/html/emacs-orgmode/2008-07/msg00027.html]
+;; ;; an (easier and cleaner, I think) alternate way to achieve
+;; ;;this would be something like this:
+
+;; (setq org-use-fast-todo-selection t)
+;; (setq org-todo-keywords
+;;       '((sequence "TODO(t)"
+;;                   "STARTED(s)"
+;;                   "WAITING(w)"
+;;                   "DELEGATED(l)" "|"
+;;                   "DONE(d)"
+;;                   "DEFERRED(f)")))
+
 
 (custom-set-variables
- '(org-agenda-files (concat org-directory "/todo.org")) 
+ '(org-agenda-files (concat org-directory "/todo.org"))
  '(org-default-notes-file (concat org-directory "/notes.org"))
  '(org-agenda-ndays 7)
  '(org-deadline-warning-days 14)
@@ -69,31 +80,42 @@
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-agenda-custom-commands
    (quote (("d" todo "DELEGATED" nil)
-	   ("c" todo "DONE|DEFERRED|CANCELLED" nil)
-	   ("w" todo "WAITING" nil)
-	   ("W" agenda "" ((org-agenda-ndays 21)))
-	   ("A" agenda ""
-	    ((org-agenda-skip-function
-	      (lambda nil
-		(org-agenda-skip-entry-if (quote notregexp) "\\=.*\\[#A\\]")))
-	     (org-agenda-ndays 1)
-	     (org-agenda-overriding-header "Today's Priority #A tasks: ")))
-	   ("u" alltodo ""
-	    ((org-agenda-skip-function
-	      (lambda nil
-		(org-agenda-skip-entry-if (quote scheduled) (quote deadline)
-					  (quote regexp) "\n]+>")))
-	     (org-agenda-overriding-header "Unscheduled TODO entries: "))))))
+          ("c" todo "DONE|DEFERRED|CANCELLED" nil)
+          ("w" todo "WAITING" nil)
+          ("W" agenda "" ((org-agenda-ndays 21)))
+          ("A" agenda ""
+           ((org-agenda-skip-function
+             (lambda nil
+               (org-agenda-skip-entry-if (quote notregexp) "\\=.*\\[#A\\]")))
+            (org-agenda-ndays 1)
+            (org-agenda-overriding-header "Today's Priority #A tasks: ")))
+          ("u" alltodo ""
+           ((org-agenda-skip-function
+             (lambda nil
+               (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
+                                         (quote regexp) "\n]+>")))
+            (org-agenda-overriding-header "Unscheduled TODO entries: "))))))
 
- '(org-remember-store-without-prompt t)
-;; '(org-remember-templates
-;;   (quote ((116 "* TODO %?\n  %u" "~/todo.org" "Tasks")
-;;	   (110 "* %u %?" "~/notes.org" "Notes"))))
-;; '(remember-annotation-functions (quote (org-remember-annotation)))
-;; '(remember-handler-functions (quote (org-remember-handler)))
+ ;; '(org-remember-templates
+ ;;   (quote ((116 "* TODO %?\n  %u" "~/todo.org" "Tasks")
+ ;;       (110 "* %u %?" "~/notes.org" "Notes"))))
+ ;; '(remember-annotation-functions (quote (org-remember-annotation)))
+ ;; '(remember-handler-functions (quote (org-remember-handler)))
+ 
  )
 
 
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline (concat org-directory "/todo.org") "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree (concat org-directory "/notes.org"))
+         "* %?\nEntered on %U\n  %i\n  %a")))
+
+
+
+
+;; End of Wiegley
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;;[[http://orgmode.org/worg/org-gtd-etc.html][Pomodoro in Org]]
@@ -106,7 +128,7 @@
 (setq org-timer-default-timer 25)
 
 ;; Modify the org-clock-in so that a timer is started with the default
-;; value except if a timer is already started:
+;; value unless a timer is already started:
 
 (add-hook 'org-clock-in-hook
           (lambda ()
