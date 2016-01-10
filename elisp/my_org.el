@@ -16,7 +16,7 @@
 
 ;; Speaking of clutter, can't live without
 (setq org-indent-mode t)
-
+(setq org-hide-leading-stars t)
 
 
 ;; Remember; _global_ keybindings are found in ./elisp/my_keybindings.el
