@@ -95,13 +95,6 @@
                (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
                                          (quote regexp) "\n]+>")))
             (org-agenda-overriding-header "Unscheduled TODO entries: "))))))
-
- ;; '(org-remember-templates
- ;;   (quote ((116 "* TODO %?\n  %u" "~/todo.org" "Tasks")
- ;;       (110 "* %u %?" "~/notes.org" "Notes"))))
- ;; '(remember-annotation-functions (quote (org-remember-annotation)))
- ;; '(remember-handler-functions (quote (org-remember-handler)))
- 
  )
 
 
@@ -109,6 +102,8 @@
       '(("t" "Todo" entry (file+headline (concat org-directory "/todo.org") "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree (concat org-directory "/notes.org"))
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ("w" "Workout" entry (file+datetree (concat org-directory "/raw_sexy.org"))
          "* %?\nEntered on %U\n  %i\n  %a")))
 
 

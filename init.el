@@ -18,12 +18,21 @@
 (package-initialize)
 
 
+;; Learn Emacs as you go!
+;; https://masteringemacs.org/article/discoverel-discover-emacs-context-menus
+;; C-x r bound to this.
+
+(require 'discover)
+(global-discover-mode 1)
+
+
 ;;Autocomplete
 ;;From http://cx4a.org/software/auto-complete/
 
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
+
 
 ;;We need ESS, currently it is on the system. This may change
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/ess/")
@@ -167,3 +176,4 @@ buffer is not visiting a file."
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 
+;;
