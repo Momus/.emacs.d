@@ -12,7 +12,7 @@
 
 
 ;; Stolen from https://rejeep.github.io/emacs/elisp/ruby/2010/11/10/ruby-interpolation.html
-;; Could be more useful; also needs a good key-binding
+
 (defun ruby-interpolate ()
   "In a double quoted string, interpolate."
   (interactive)
@@ -22,6 +22,7 @@
          (looking-at ".*\""))
     (insert "{}")
     (backward-char 1)))
+(define-key ruby-mode-map (kbd "#") 'ruby-interpolate)
 
 
 ;;; Rinari
