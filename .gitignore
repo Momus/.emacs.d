@@ -18,3 +18,5 @@ ido.last
 *backup*
 .org-id-locations
 elpa/archives*
+ido.last~
+literate_init.el

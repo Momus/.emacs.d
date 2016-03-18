@@ -22,7 +22,7 @@
          (looking-at ".*\""))
     (insert "{}")
     (backward-char 1)))
-(define-key ruby-mode-map (kbd "#") 'ruby-interpolate)
+;(define-key ruby-mode-map (kbd "#") 'ruby-interpolate)
 
 
 ;;; Rinari

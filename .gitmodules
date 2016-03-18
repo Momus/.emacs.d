@@ -1,3 +1,9 @@
 [submodule "elisp/external/rvm.el"]
 	path = elisp/external/rvm.el
 	url = https://github.com/senny/rvm.el.git
+[submodule "src"]
+	path = src
+	url = git://orgmode.org/org-mode.git
+[submodule "src/org-mode/org-mode"]
+	path = src/org-mode/org-mode
+	url = git://orgmode.org/org-mode.git
