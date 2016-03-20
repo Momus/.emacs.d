@@ -1,16 +1,17 @@
 #+TITLE:       Literate Emacs Configuration
 #+AUTHOR:      Dmitri Brengauz
-#+EMAIL:       dmitri@momus.net
+#+EMAIL:       dmitri at momus dot net
 #+DATE:        2016-03-15 Tue
 #+DESCRIPTION: Managing my .emacs the literate programming way with org-mode.
 
 * General Settings
+  Definitions found here apply to all emacs sessions.
   
 *** Personal Information
     #+NAME: literate_init.el
     #+BEGIN_SRC emacs-lisp :tangle yes
         (setq user-full-name "Dmitri G. Brengauz"
-              user-mail-address "dmitri@momus.net")
+              user-mail-address "dmitri at momus dot net")
     #+END_SRC
 
 *** Load path
@@ -25,21 +26,29 @@
       (package-initialize)
     #+END_SRC
 
-*** Appearence
-
-***** Ido Mode iZ TeH Bomb
-      #+BEGIN_SRC emacs-lisp
-      (require 'ido)
-      (ido-mode t)
-      #+END_SRC
-
-
-***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
-      #+BEGIN_SRC emacs-lisp
-      (load "window_number")
-      (require 'window-number)
-      (window-number-mode 1)
-      #+END_SRC
+*** Useful Functions
+******* Ido Mode iZ TeH Bomb
+        #+BEGIN_SRC emacs-lisp
+        (require 'ido)
+        (ido-mode t)
+        #+END_SRC
+******* [[https://github.com/magnars/expand-region.el][Expand Region]]
+        All sorts of goodies can be found in the docs for er/* functions.
+        #+BEGIN_SRC emacs-lisp
+          (require 'expand-region)
+          (global-set-key (kbd "C-=") 'er/expand-region)
+        #+END_SRC
+******* [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
+        #+BEGIN_SRC emacs-lisp
+        (load "window_number")
+        (require 'window-number)
+        (window-number-mode 1)
+        #+END_SRC
+* External Programs
+*** Web Browser
+***** TODO Set Conkeror as default browser. 
+      - [ ] Make clicked links open in existing conkeror process if
+        one exist in same StumpWM window group.
 
 
 * And the rest
