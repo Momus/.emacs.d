@@ -7,3 +7,6 @@
 [submodule "src/org-mode/org-mode"]
 	path = src/org-mode/org-mode
 	url = git://orgmode.org/org-mode.git
+[submodule "elisp/buffer-move"]
+	path = elisp/buffer-move
+	url = git@github.com:lukhas/buffer-move.git

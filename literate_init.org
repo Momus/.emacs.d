@@ -27,168 +27,235 @@
     #+END_SRC
 
 *** Useful Functions
-******* Ido Mode iZ TeH Bomb
+***** Ido Mode iZ TeH Bomb
+      #+BEGIN_SRC emacs-lisp
+      (require 'ido)
+      (ido-mode t)
+      #+END_SRC
+***** [[https://github.com/magnars/expand-region.el][Expand Region]]
+      All sorts of goodies can be found in the docs for er/* functions.
+      #+BEGIN_SRC emacs-lisp
+        (require 'expand-region)
+        (global-set-key (kbd "C-=") 'er/expand-region)
+      #+END_SRC
+***** Buffermove 
+        [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
+        module, which will have to be pulled for updates.
         #+BEGIN_SRC emacs-lisp
-        (require 'ido)
-        (ido-mode t)
+          (load "buffer-move.el")
         #+END_SRC
-******* [[https://github.com/magnars/expand-region.el][Expand Region]]
-        All sorts of goodies can be found in the docs for er/* functions.
+
+        We want current window to switch to previous buffer
+        instead of swapping buffers of both windows:
         #+BEGIN_SRC emacs-lisp
-          (require 'expand-region)
-          (global-set-key (kbd "C-=") 'er/expand-region)
+          (setq buffer-move-behavior 'move)
         #+END_SRC
-******* [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
+******* Unseful key bindings:                                       :keybind:
         #+BEGIN_SRC emacs-lisp
-        (load "window_number")
-        (require 'window-number)
-        (window-number-mode 1)
+          (global-set-key (kbd "<C-S-up>")     'buf-move-up)
+          (global-set-key (kbd "<C-S-down>")   'buf-move-down)
+          (global-set-key (kbd "<C-S-left>")   'buf-move-left)
+          (global-set-key (kbd "<C-S-right>")  'buf-move-right)
         #+END_SRC
+
+***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
+      #+BEGIN_SRC emacs-lisp
+      (load "window_number")
+      (require 'window-number)
+      (window-number-mode 1)
+      #+END_SRC
+*** On-start global settings
+***** Autocompletion better on than off.
+      Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
+      #+BEGIN_SRC emacs-lisp
+        (add-hook 'after-init-hook 'global-company-mode)
+        (with-eval-after-load 'company
+          (add-to-list 'company-backends 'company-elm))
+      #+END_SRC
 * External Programs
 *** Web Browser
 ***** TODO Set Conkeror as default browser. 
       - [ ] Make clicked links open in existing conkeror process if
         one exist in same StumpWM window group.
 
+* Org Mode
 
+*** Outline View
+    Generally keep it [[http://orgmode.org/manual/Clean-view.html][clean]] without too many bells and whistles
+    #+BEGIN_SRC emacs-lisp
+      (global-font-lock-mode 1)
+      (require 'org)
+      (require 'org-agenda)
+
+      (setq org-odd-levels-only 1)
+      (setq org-indent-mode t)
+      (setq org-hide-leading-stars t)
+    #+END_SRC
+
+*** Code Blocks
+    - Get rid of confirmation and syntax highlight code in text blocks:
+      #+BEGIN_SRC emacs-lisp
+        (setq org-confim-babel-evaluate nil
+              org-src-fontify-natively t
+              org-src-tab-acts-natively t)
+      #+END_SRC
+    
+    - Load the languages we need; emacs-lisp we get for free
+      #+BEGIN_SRC emacs-lisp
+        (require 'ob-ruby)
+        (require 'ob-sh)
+        (require 'ob-R)
+        (require 'ob-python)
+      #+END_SRC
+
+*** Exporting
+    - The htmlize package makes source code pretty on export
+      #+BEGIN_SRC emacs-lisp
+        (require 'htmlize)
+      #+END_SRC
+
+*** 
+    
+* Magit
+
+*** Keybindings                                                     :keybind:
+    #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-x C-g") 'magit-status)
+    #+END_SRC
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
   now everything else in my old init goes here. It is also part of the
   plan to get rid of config files in the elisp directory and put most of that here.
   #+BEGIN_SRC emacs-lisp
-  
-;; R/ESS does not have own file yet
-(require 'ob-R) ;evaluate R in org-mode
+
+    ;; Org mode configuration
+    (load "my_org")
+
+    ;; All ruby stuff
+    (load "rubies")
+
+    ;;Git!
+    (load "gits")
+
+    ;;Eshell!
+    (load "my_eshell")
+
+    ;;Window number!
+    (load "window_number")
+    (require 'window-number)
+    (window-number-mode 1)
+    ;; Remaps the default window switch key to use window-number mode
+    (global-set-key "\C-xo"  'window-number-switch)
 
 
-;; Org mode configuration
-(load "my_org")
+    ;; We like desktop save mode, however, it is a bad idea to keep saved
+    ;; desktops in a git repository.  So while it is enabled, make sure that
+    ;; the desktop directory is in git ignore
 
-;; All ruby stuff
-(load "rubies")
+    (desktop-save-mode 1)
+    (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
 
-;;Git!
-(load "gits")
-
-;;Eshell!
-(load "my_eshell")
-
-;;Window number!
-(load "window_number")
-(require 'window-number)
-(window-number-mode 1)
-;; Remaps the default window switch key to use window-number mode
-(global-set-key "\C-xo"  'window-number-switch)
+    ;;Edit browser text-areas with Emacs!
+    (require 'edit-server)
+    (edit-server-start)
 
 
-;; We like desktop save mode, however, it is a bad idea to keep saved
-;; desktops in a git repository.  So while it is enabled, make sure that
-;; the desktop directory is in git ignore
-
-(desktop-save-mode 1)
-(add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
-
-;;Edit browser text-areas with Emacs!
-(require 'edit-server)
-(edit-server-start)
+    ;;Some basic config options
 
 
-;;Some basic config options
+                                            ;A steady light, not blinking parens
+    (show-paren-mode t)
+    (setq show-paren-style 'expression)
+    (setq show-paren-delay 0)
+
+                                            ;No splash screen at start-up
+    (setq inhibit-startup-screen t)
+
+    ;;;Take off  the training wheels for a while longer
+    (menu-bar-mode -1)
+
+                                            ; Save space
+    (tool-bar-mode -1)
+
+    ;;; AUCTeX
+    ;; Customary Customization, p. 1 and 16 in the manual
+    ;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
+
+    (setq TeX-parse-self t); Enable parse on load.
+    (setq TeX-auto-save t); Enable parse on save.
+    (setq-default TeX-master nil)
+
+    (setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
+
+    (add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
+    (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
+    (add-hook 'TeX-mode-hook
+              (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
+
+    ;;; RefTeX
+    ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
+    (add-hook 'TeX-mode-hook 'turn-on-reftex)
 
 
-;A steady light, not blinking parens
-(show-paren-mode t)
-(setq show-paren-style 'expression)
-(setq show-paren-delay 0)
-
-;No splash screen at start-up
-(setq inhibit-startup-screen t)
-
-;;;Take off  the training wheels for a while longer
-(menu-bar-mode -1)
-
-; Save space
-(tool-bar-mode -1)
-
-;;; AUCTeX
-;; Customary Customization, p. 1 and 16 in the manual
-;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
-
-(setq TeX-parse-self t); Enable parse on load.
-(setq TeX-auto-save t); Enable parse on save.
-(setq-default TeX-master nil)
-
-(setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
-
-(add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
-(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
-(add-hook 'TeX-mode-hook
-          (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
-
-;;; RefTeX
-;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
-(add-hook 'TeX-mode-hook 'turn-on-reftex)
-
-
-;; Winner Mode Wins!
-(when (fboundp 'winner-mode) ;Compat test
+    ;; Winner Mode Wins!
+    (when (fboundp 'winner-mode) ;Compat test
       (winner-mode 1))
 
-;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
-;; have winner-mode.
+    ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
+    ;; have winner-mode.
 
 
-;;How about a nice clock?
+    ;;How about a nice clock?
 
-(defface egoge-display-time
-   '((((type x w32 mac))
-      (:foreground "#060525" :inherit bold))
-     (((type tty))
-      (:foreground "blue")))
-   "Face used to display the time in the mode line.")
+    (defface egoge-display-time
+      '((((type x w32 mac))
+         (:foreground "#060525" :inherit bold))
+        (((type tty))
+         (:foreground "blue")))
+      "Face used to display the time in the mode line.")
 
-;; This causes the current time in the mode line to be displayed in
-;; `egoge-display-time-face' to make it stand out visually.
-;; Clock is set to 24 hour mode and two | to act as separators with
-;; the system load indicator
+    ;; This causes the current time in the mode line to be displayed in
+    ;; `egoge-display-time-face' to make it stand out visually.
+    ;; Clock is set to 24 hour mode and two | to act as separators with
+    ;; the system load indicator
 
-(setq display-time-string-forms
-      '((propertize (concat 24-hours":"minutes"\|"load"\|")
- 		    'face 'egoge-display-time)))
+    (setq display-time-string-forms
+          '((propertize (concat 24-hours":"minutes"\|"load"\|")
+                        'face 'egoge-display-time)))
 
-;; This line has to be under the two functions above.  Execution order matters in Elisp.
-(display-time-mode 1)
-
-
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize) 
+    ;; This line has to be under the two functions above.  Execution order matters in Elisp.
+    (display-time-mode 1)
 
 
-;; Going to give this:
-;; http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
-;; a try.
-;; (global-set-key (kbd "C-x C-r") 'sudo-edit)
+    (require 'package)
+    (add-to-list 'package-archives
+                 '("melpa" . "http://melpa.org/packages/") t)
+    (when (< emacs-major-version 24)
+      ;; For important compatibility libraries like cl-lib
+      (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+    (package-initialize) 
 
 
-(defun sudo-edit (&optional arg)
-  "Edit currently visited file as root.
-
-With a prefix ARG prompt for a file to visit.
-Will also prompt for a file to visit if current
-buffer is not visiting a file."
-  (interactive "P")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:"
-                         (ido-read-file-name "Find file(as root): ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+    ;; Going to give this:
+    ;; http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
+    ;; a try.
+    ;; (global-set-key (kbd "C-x C-r") 'sudo-edit)
 
 
-;;
+    (defun sudo-edit (&optional arg)
+      "Edit currently visited file as root.
+
+    With a prefix ARG prompt for a file to visit.
+    Will also prompt for a file to visit if current
+    buffer is not visiting a file."
+      (interactive "P")
+      (if (or arg (not buffer-file-name))
+          (find-file (concat "/sudo:root@localhost:"
+                             (ido-read-file-name "Find file(as root): ")))
+        (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+
+    ;;
 
   #+END_SRC
 

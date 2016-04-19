@@ -1,27 +1,3 @@
-;; Enabled by default in newer Emacs, but can't hurt just the same,
-;; Necessary for org-mode
-(global-font-lock-mode 1)
-
-;; Only required on older versions of Emacs:
-;; Org mode is now built in.
-;; (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-;; (require 'org-install)
-(require 'org)
-(require 'org-agenda)
-
-
-;; Odd levels by default to keep from clutter.
-;; Also, odd numbers are better luck they say.
-(setq org-odd-levels-only 1)
-
-;; Speaking of clutter, can't live without
-(setq org-indent-mode t)
-(setq org-hide-leading-stars t)
-
-
-;; Remember; _global_ keybindings are found in ./elisp/my_keybindings.el
-;;
-
 ;; Set up Capture mode to replace remember mode
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
