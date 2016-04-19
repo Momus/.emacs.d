@@ -117,11 +117,15 @@
 *** 
     
 * Magit
+  #+BEGIN_SRC emacs-lisp
+  (require 'magit)
+  #+END_SRC
 
 *** Keybindings                                                     :keybind:
     #+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "C-x C-g") 'magit-status)
+    (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
+
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
   now everything else in my old init goes here. It is also part of the
@@ -133,9 +137,6 @@
 
     ;; All ruby stuff
     (load "rubies")
-
-    ;;Git!
-    (load "gits")
 
     ;;Eshell!
     (load "my_eshell")
@@ -258,9 +259,3 @@
     ;;
 
   #+END_SRC
-
-
-
-
-
-  
