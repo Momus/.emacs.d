@@ -38,7 +38,7 @@
         (require 'expand-region)
         (global-set-key (kbd "C-=") 'er/expand-region)
       #+END_SRC
-***** Buffermove 
+***** Buffer-move 
         [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
         module, which will have to be pulled for updates.
         #+BEGIN_SRC emacs-lisp
@@ -113,8 +113,6 @@
       #+BEGIN_SRC emacs-lisp
         (require 'htmlize)
       #+END_SRC
-
-*** 
     
 * Magit
   #+BEGIN_SRC emacs-lisp
