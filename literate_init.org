@@ -20,11 +20,16 @@
     #+END_SRC
 
 *** Package Management
-    We are using Elpa, 'cause it's simple
+    Adding [[http://melpa.org/#/getting-started][Melpa]] for magit and others.
     #+BEGIN_SRC emacs-lisp
-      (require 'package)
-      (package-initialize)
+     (require 'package)
+     (add-to-list 'package-archives
+             '("melpa" . "https://stable.melpa.org/packages/"))
+     (package-initialize)
+
     #+END_SRC
+
+    #+RESULTS:
 
 *** Useful Functions
 ***** Ido Mode iZ TeH Bomb
@@ -116,7 +121,7 @@
     
 * Magit
   #+BEGIN_SRC emacs-lisp
-  (require 'magit)
+  ;(require 'magit)
   #+END_SRC
 
 *** Keybindings                                                     :keybind:
@@ -180,20 +185,20 @@
     ;; Customary Customization, p. 1 and 16 in the manual
     ;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
 
-    (setq TeX-parse-self t); Enable parse on load.
-    (setq TeX-auto-save t); Enable parse on save.
-    (setq-default TeX-master nil)
+;;    (setq TeX-parse-self t); Enable parse on load.
+;;    (setq TeX-auto-save t); Enable parse on save.
+;;    (setq-default TeX-master nil)
 
-    (setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
+;;    (setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
 
-    (add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
-    (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
-    (add-hook 'TeX-mode-hook
-              (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
+;;    (add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
+ ;;   (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
+;;    (add-hook 'TeX-mode-hook
+;;              (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
 
     ;;; RefTeX
     ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
-    (add-hook 'TeX-mode-hook 'turn-on-reftex)
+ ;;   (add-hook 'TeX-mode-hook 'turn-on-reftex)
 
 
     ;; Winner Mode Wins!
