@@ -6,7 +6,6 @@
 
 * General Settings
   Definitions found here apply to all emacs sessions.
-  
 *** Personal Information
     #+NAME: literate_init.el
     #+BEGIN_SRC emacs-lisp :tangle yes
@@ -26,12 +25,42 @@
      (add-to-list 'package-archives
              '("melpa" . "https://stable.melpa.org/packages/"))
      (package-initialize)
+    #+END_SRC
+*** How about a nice clock?
+    #+BEGIN_SRC emacs-lisp
+    (defface egoge-display-time
+      '((((type x w32 mac))
+         (:foreground "#060525" :inherit bold))
+        (((type tty))
+         (:foreground "blue")))
+      "Face used to display the time in the mode line.")
 
+    ;; This causes the current time in the mode line to be displayed in
+    ;; `egoge-display-time-face' to make it stand out visually.
+    ;; Clock is set to 24 hour mode and two | to act as separators with
+    ;; the system load indicator
+
+    (setq display-time-string-forms
+          '((propertize (concat 24-hours":"minutes"\|"load"\|")
+                        'face 'egoge-display-time)))
+
+    ;; This line has to be under the two functions above.  Execution order matters in Elisp.
+    (display-time-mode 1)
     #+END_SRC
 
     #+RESULTS:
+    : t
 
 *** Useful Functions
+
+*** Winner Mode Wins!
+    #+BEGIN_SRC emacs-lisp
+    (when (fboundp 'winner-mode) ;Compat test
+      (winner-mode 1))
+
+    ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
+    ;; have winner-mode.
+    #+END_SRC
 ***** Ido Mode iZ TeH Bomb
       #+BEGIN_SRC emacs-lisp
       (require 'ido)
@@ -121,7 +150,7 @@
     
 * Magit
   #+BEGIN_SRC emacs-lisp
-  ;(require 'magit)
+  (require 'magit)
   #+END_SRC
 
 *** Keybindings                                                     :keybind:
@@ -200,44 +229,6 @@
     ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
  ;;   (add-hook 'TeX-mode-hook 'turn-on-reftex)
 
-
-    ;; Winner Mode Wins!
-    (when (fboundp 'winner-mode) ;Compat test
-      (winner-mode 1))
-
-    ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
-    ;; have winner-mode.
-
-
-    ;;How about a nice clock?
-
-    (defface egoge-display-time
-      '((((type x w32 mac))
-         (:foreground "#060525" :inherit bold))
-        (((type tty))
-         (:foreground "blue")))
-      "Face used to display the time in the mode line.")
-
-    ;; This causes the current time in the mode line to be displayed in
-    ;; `egoge-display-time-face' to make it stand out visually.
-    ;; Clock is set to 24 hour mode and two | to act as separators with
-    ;; the system load indicator
-
-    (setq display-time-string-forms
-          '((propertize (concat 24-hours":"minutes"\|"load"\|")
-                        'face 'egoge-display-time)))
-
-    ;; This line has to be under the two functions above.  Execution order matters in Elisp.
-    (display-time-mode 1)
-
-
-    (require 'package)
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.org/packages/") t)
-    (when (< emacs-major-version 24)
-      ;; For important compatibility libraries like cl-lib
-      (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-    (package-initialize) 
 
 
     ;; Going to give this:
