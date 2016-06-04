@@ -52,39 +52,38 @@
     : t
 
 *** Useful Functions
-
-*** Winner Mode Wins!
-    #+BEGIN_SRC emacs-lisp
-    (when (fboundp 'winner-mode) ;Compat test
-      (winner-mode 1))
-
-    ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
-    ;; have winner-mode.
-    #+END_SRC
-***** Ido Mode iZ TeH Bomb
+***** Winner Mode Wins!
       #+BEGIN_SRC emacs-lisp
-      (require 'ido)
-      (ido-mode t)
-      #+END_SRC
-***** [[https://github.com/magnars/expand-region.el][Expand Region]]
-      All sorts of goodies can be found in the docs for er/* functions.
-      #+BEGIN_SRC emacs-lisp
-        (require 'expand-region)
-        (global-set-key (kbd "C-=") 'er/expand-region)
-      #+END_SRC
-***** Buffer-move 
-        [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
-        module, which will have to be pulled for updates.
-        #+BEGIN_SRC emacs-lisp
-          (load "buffer-move.el")
-        #+END_SRC
+      (when (fboundp 'winner-mode) ;Compat test
+        (winner-mode 1))
 
-        We want current window to switch to previous buffer
-        instead of swapping buffers of both windows:
+      ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
+      ;; have winner-mode.
+      #+END_SRC
+******* Ido Mode iZ TeH Bomb
         #+BEGIN_SRC emacs-lisp
-          (setq buffer-move-behavior 'move)
+        (require 'ido)
+        (ido-mode t)
         #+END_SRC
-******* Unseful key bindings:                                       :keybind:
+******* [[https://github.com/magnars/expand-region.el][Expand Region]]
+        All sorts of goodies can be found in the docs for er/* functions.
+        #+BEGIN_SRC emacs-lisp
+          (require 'expand-region)
+          (global-set-key (kbd "C-=") 'er/expand-region)
+        #+END_SRC
+******* Buffer-move 
+          [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
+          module, which will have to be pulled for updates.
+          #+BEGIN_SRC emacs-lisp
+            (load "buffer-move.el")
+          #+END_SRC
+
+          We want current window to switch to previous buffer
+          instead of swapping buffers of both windows:
+          #+BEGIN_SRC emacs-lisp
+            (setq buffer-move-behavior 'move)
+          #+END_SRC
+********* Unseful key bindings:                                       :keybind:
         #+BEGIN_SRC emacs-lisp
           (global-set-key (kbd "<C-S-up>")     'buf-move-up)
           (global-set-key (kbd "<C-S-down>")   'buf-move-down)
@@ -98,6 +97,21 @@
       (require 'window-number)
       (window-number-mode 1)
       #+END_SRC
+***** [[ http://emacsredux.com/blog/2013/04/21/edit-files-as-root/][Sudo Edit]]
+         #+BEGIN_SRC emacs-lisp
+   (defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(global-set-key (kbd "C-x C-r") 'sudo-edit)
+       #+END_SRC
 *** On-start global settings
 ***** Autocompletion better on than off.
       Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
@@ -108,10 +122,9 @@
       #+END_SRC
 * External Programs
 *** Web Browser
-***** TODO Set Conkeror as default browser. 
+***** TODO [0/1]Set Conkeror as default browser. 
       - [ ] Make clicked links open in existing conkeror process if
         one exist in same StumpWM window group.
-
 * Org Mode
 
 *** Outline View
@@ -229,27 +242,5 @@
     ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
  ;;   (add-hook 'TeX-mode-hook 'turn-on-reftex)
 
-
-
-    ;; Going to give this:
-    ;; http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
-    ;; a try.
-    ;; (global-set-key (kbd "C-x C-r") 'sudo-edit)
-
-
-    (defun sudo-edit (&optional arg)
-      "Edit currently visited file as root.
-
-    With a prefix ARG prompt for a file to visit.
-    Will also prompt for a file to visit if current
-    buffer is not visiting a file."
-      (interactive "P")
-      (if (or arg (not buffer-file-name))
-          (find-file (concat "/sudo:root@localhost:"
-                             (ido-read-file-name "Find file(as root): ")))
-        (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-
-    ;;
 
   #+END_SRC
