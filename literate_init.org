@@ -126,14 +126,12 @@ buffer is not visiting a file."
       - [ ] Make clicked links open in existing conkeror process if
         one exist in same StumpWM window group.
 * Org Mode
-
 *** Outline View
     Generally keep it [[http://orgmode.org/manual/Clean-view.html][clean]] without too many bells and whistles
     #+BEGIN_SRC emacs-lisp
       (global-font-lock-mode 1)
       (require 'org)
       (require 'org-agenda)
-
       (setq org-odd-levels-only 1)
       (setq org-indent-mode t)
       (setq org-hide-leading-stars t)
@@ -143,8 +141,8 @@ buffer is not visiting a file."
     - Get rid of confirmation and syntax highlight code in text blocks:
       #+BEGIN_SRC emacs-lisp
         (setq org-confim-babel-evaluate nil
-              org-src-fontify-natively t
-              org-src-tab-acts-natively t)
+             org-src-fontify-natively t
+            org-src-tab-acts-natively t)
       #+END_SRC
     
     - Load the languages we need; emacs-lisp we get for free
@@ -160,16 +158,66 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (require 'htmlize)
       #+END_SRC
+*** Capture
+    - Replaces remember mode. Get stuff from your brain into org-mode
+      quick!
+      #+BEGIN_SRC emacs-lisp
+        (setq org-default-notes-file (concat org-directory "/notes.org"))
+        (define-key mode-specific-map [?a] 'org-agenda)
+
+        (eval-after-load "org"
+          '(progn
+             (define-prefix-command 'org-todo-state-map)
+             
+             (define-key org-mode-map "\C-cx" 'org-todo-state-map)
+
+             (define-key org-todo-state-map "x"
+               #'(lambda nil (interactive) (org-todo "CANCELLED")))
+             (define-key org-todo-state-map "d"
+               #'(lambda nil (interactive) (org-todo "DONE")))
+             (define-key org-todo-state-map "f"
+               #'(lambda nil (interactive) (org-todo "DEFERRED")))
+             (define-key org-todo-state-map "l"
+               #'(lambda nil (interactive) (org-todo "DELEGATED")))
+             (define-key org-todo-state-map "s"
+               #'(lambda nil (interactive) (org-todo "STARTED")))
+             (define-key org-todo-state-map "w"
+               #'(lambda nil (interactive) (org-todo "WAITING")))
+             (define-key org-agenda-mode-map "\C-n" 'next-line)
+             (define-key org-agenda-keymap "\C-n" 'next-line)
+             (define-key org-agenda-mode-map "\C-p" 'previous-line)
+             (define-key org-agenda-keymap "\C-p" 'previous-line)
+             )
+          )
+        ;; ;;https://lists.gnu.org/archive/html/emacs-orgmode/2008-07/msg00027.html]
+        ;; ;; an (easier and cleaner, I think) alternate way to achieve
+        ;; ;;this would be something like this:
+
+        ;; (setq org-use-fast-todo-selection t)
+        ;; (setq org-todo-keywords
+        ;;       '((sequence "TODO(t)"
+        ;;                   "STARTED(s)"
+        ;;                   "WAITING(w)"
+        ;;                   "DELEGATED(l)" "|"
+        ;;                   "DONE(d)"
+        ;;                   "DEFERRED(f)")))
+       
+
+      #+END_SRC
+*** Agenda
+    #+BEGIN_SRC emacs-lisp
     
+    #+END_SRC
 * Magit
   #+BEGIN_SRC emacs-lisp
-  (require 'magit)
+   (require 'magit)
   #+END_SRC
 
 *** Keybindings                                                     :keybind:
     #+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "C-x g") 'magit-status)
+     (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
+
 
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
