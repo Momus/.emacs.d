@@ -30,12 +30,17 @@
 
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline (concat org-directory "/todo.org") "Tasks")
+      '(
+        
+        ("t" "Todo" entry (file+headline (concat org-directory "/todo.org") "Tasks")
          "* TODO %?\n  %i\n  %a")
+        
         ("j" "Journal" entry (file+datetree (concat org-directory "/notes.org"))
          "* %?\nEntered on %U\n  %i\n  %a")
+        
         ("w" "Workout" entry (file+datetree (concat org-directory "/raw_sexy.org"))
-         "* %?\nEntered on %U\n  %i\n  %a")))
+         "* %?\nEntered on %U\n  %i\n  %a"))
+      )
 
 
 

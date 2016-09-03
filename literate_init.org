@@ -22,8 +22,11 @@
     Adding [[http://melpa.org/#/getting-started][Melpa]] for magit and others.
     #+BEGIN_SRC emacs-lisp
      (require 'package)
-     (add-to-list 'package-archives
-             '("melpa" . "https://stable.melpa.org/packages/"))
+      (add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
      (package-initialize)
     #+END_SRC
 *** How about a nice clock?
@@ -120,11 +123,24 @@ buffer is not visiting a file."
         (with-eval-after-load 'company
           (add-to-list 'company-backends 'company-elm))
       #+END_SRC
+***** TODO Enable Company Quickhelp (from Melpa) 
+      #+BEGIN_SRC emacs-lisp
+        (company-quickhelp-mode 1)
+      #+END_SRC
+
 * External Programs
+*** Ledger
+    #+BEGIN_SRC emacs-lisp
+      (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
+      (add-to-list 'load-path
+         (expand-file-name "~/usr/src/ledger/lisp/"))
+         (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+    #+END_SRC
 *** Web Browser
 ***** TODO [0/1]Set Conkeror as default browser. 
       - [ ] Make clicked links open in existing conkeror process if
         one exist in same StumpWM window group.
+
 * Org Mode
 *** Outline View
     Generally keep it [[http://orgmode.org/manual/Clean-view.html][clean]] without too many bells and whistles
@@ -218,7 +234,12 @@ buffer is not visiting a file."
      (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
 
-
+* [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
+  These are highly personalizable, and should probaby be saved on a per-machine basis.
+*** This init file
+    #+BEGIN_SRC emacs-lisp
+    (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
+    #+END_SRC
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
   now everything else in my old init goes here. It is also part of the
