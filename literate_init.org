@@ -92,6 +92,9 @@
           (global-set-key (kbd "<C-S-down>")   'buf-move-down)
           (global-set-key (kbd "<C-S-left>")   'buf-move-left)
           (global-set-key (kbd "<C-S-right>")  'buf-move-right)
+          (global-set-key (kbd "<C-tab>") #'other-window)
+          ;; Keep C-tab in org-mode
+          (define-key org-mode-map (kbd "<C-tab>") #'other-window)
         #+END_SRC
 
 ***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
@@ -127,7 +130,7 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (company-quickhelp-mode 1)
       #+END_SRC
-
+      
 * External Programs
 *** Ledger
     #+BEGIN_SRC emacs-lisp
@@ -164,7 +167,7 @@ buffer is not visiting a file."
     - Load the languages we need; emacs-lisp we get for free
       #+BEGIN_SRC emacs-lisp
         (require 'ob-ruby)
-        (require 'ob-sh)
+       ;; (require 'ob-sh) now built in?
         (require 'ob-R)
         (require 'ob-python)
       #+END_SRC
@@ -233,7 +236,7 @@ buffer is not visiting a file."
     #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
-
+    
 * [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
   These are highly personalizable, and should probaby be saved on a per-machine basis.
 *** This init file
