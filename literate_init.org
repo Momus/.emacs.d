@@ -29,6 +29,11 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
      (package-initialize)
     #+END_SRC
+*** Client Server Labor Relations
+***** Fix ido so it shares buffers amongst frames. [[http://stackoverflow.com/questions/27465616/emacsclient-will-not-allow-two-different-frames-to-have-the-same-file-open][Source]]
+      #+BEGIN_SRC emacs-lisp
+        (setq ido-default-buffer-method 'selected-window)
+      #+END_SRC
 *** How about a nice clock?
     #+BEGIN_SRC emacs-lisp
     (defface egoge-display-time
