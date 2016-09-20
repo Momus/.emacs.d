@@ -27,21 +27,21 @@
 
 ;;; Rinari
 
-(require 'rinari)
-;; Have Rinari automatically update your tags-file-name variable
-;; to point to the tags of your current rails project
-(setq rinari-tags-file-name "TAGS")
+;; (require 'rinari)
+;; ;; Have Rinari automatically update your tags-file-name variable
+;; ;; to point to the tags of your current rails project
+;; (setq rinari-tags-file-name "TAGS")
 
-;; ;; Use web mode for erb rather than Ruby mode:
-;; ;; http://web-mode.org/
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
- (setq web-mode-enable-auto-pairing t)
- (setq web-mode-enable-css-colorization t)
- (setq web-mode-enable-block-face t)
- (setq web-mode-enable-current-element-highlight t)
- (setq web-mode-enable-current-column-highlight t)
- (setq web-mode-ac-sources-alist
-   '(("css" . (ac-source-css-property))
-     ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+;; ;; ;; Use web mode for erb rather than Ruby mode:
+;; ;; ;; http://web-mode.org/
+;; (require 'web-mode)
+;; (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+;;  (setq web-mode-enable-auto-pairing t)
+;;  (setq web-mode-enable-css-colorization t)
+;;  (setq web-mode-enable-block-face t)
+;;  (setq web-mode-enable-current-element-highlight t)
+;;  (setq web-mode-enable-current-column-highlight t)
+;;  (setq web-mode-ac-sources-alist
+;;    '(("css" . (ac-source-css-property))
+;;      ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
 
