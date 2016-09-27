@@ -68,17 +68,20 @@
       ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
       ;; have winner-mode.
       #+END_SRC
-******* Ido Mode iZ TeH Bomb
-        #+BEGIN_SRC emacs-lisp
-        (require 'ido)
-        (ido-mode t)
-        #+END_SRC
-******* [[https://github.com/magnars/expand-region.el][Expand Region]]
-        All sorts of goodies can be found in the docs for er/* functions.
-        #+BEGIN_SRC emacs-lisp
-          (require 'expand-region)
-          (global-set-key (kbd "C-=") 'er/expand-region)
-        #+END_SRC
+***** Now trying Ivy: Ido Mode WAS TeH Bomb
+      #+BEGIN_SRC emacs-lisp
+        ;;(require 'ido)
+        ;;(ido-mode f)
+        (require 'ivy)
+        (ivy-mode t)
+        (setq magit-completing-read-function 'ivy-completing-read)
+      #+END_SRC
+***** [[https://github.com/magnars/expand-region.el][Expand Region]]
+      All sorts of goodies can be found in the docs for er/* functions.
+      #+BEGIN_SRC emacs-lisp
+        (require 'expand-region)
+        (global-set-key (kbd "C-=") 'er/expand-region)
+      #+END_SRC
 ******* Buffer-move 
           [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
           module, which will have to be pulled for updates.
@@ -242,11 +245,25 @@ buffer is not visiting a file."
      (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
     
+* R
+
+*** packages: 
+
+***** ess
+
+***** 
 * [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
   These are highly personalizable, and should probaby be saved on a per-machine basis.
 *** This init file
     #+BEGIN_SRC emacs-lisp
     (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
+    #+END_SRC
+* Eshell
+*** TODO Get rid of seperate Eshell file
+*** Nyan prompt
+    Because why not?
+    #+BEGIN_SRC emacs-lisp
+    (add-hook 'eshell-load-hook 'nyan-prompt-enable)
     #+END_SRC
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
