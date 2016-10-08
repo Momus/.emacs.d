@@ -1,4 +1,4 @@
-#+TITLE:       Literate Emacs Configuration
++TITLE:       Literate Emacs Configuration
 #+AUTHOR:      Dmitri Brengauz
 #+EMAIL:       dmitri at momus dot net
 #+DATE:        2016-03-15 Tue
@@ -172,10 +172,22 @@ buffer is not visiting a file."
             org-src-tab-acts-natively t)
       #+END_SRC
     
-    - Load the languages we need; emacs-lisp we get for free
+    - Load the languages we need; emacs-lisp we get for free.
+      first you need to load them:
+      #+BEGIN_SRC emacs-lisp
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((sh . t)
+           (R . t)
+           (ruby . t)
+           (python . t)
+           )
+         )
+      #+END_SRC
+      Then you need to require them. Note, for sh, the required file is ob-shell, not ob-sh.
       #+BEGIN_SRC emacs-lisp
         (require 'ob-ruby)
-       ;; (require 'ob-sh) now built in?
+        (require 'ob-shell)
         (require 'ob-R)
         (require 'ob-python)
       #+END_SRC
@@ -233,7 +245,7 @@ buffer is not visiting a file."
       #+END_SRC
 *** Agenda
     #+BEGIN_SRC emacs-lisp
-    
+
     #+END_SRC
 * Magit
   #+BEGIN_SRC emacs-lisp
