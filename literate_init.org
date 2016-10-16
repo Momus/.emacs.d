@@ -34,30 +34,38 @@
       #+BEGIN_SRC emacs-lisp
         (setq ido-default-buffer-method 'selected-window)
       #+END_SRC
-*** How about a nice clock?
-    #+BEGIN_SRC emacs-lisp
-    (defface egoge-display-time
-      '((((type x w32 mac))
-         (:foreground "#060525" :inherit bold))
-        (((type tty))
-         (:foreground "blue")))
-      "Face used to display the time in the mode line.")
+*** Mode Line
+***** [[https://github.com/Malabarba/smart-mode-line][Smart-mode-line]]
+      - intalled package smart-mode-line-powerline-theme
+      - configuration
+	#+BEGIN_SRC emacs-lisp
+          (setq sml/theme 'powerline)
+          (sml/setup)
+	#+END_SRC
+***** How about a nice clock?
+      #+BEGIN_SRC emacs-lisp
+      (defface egoge-display-time
+	'((((type x w32 mac))
+           (:foreground "#060525" :inherit bold))
+          (((type tty))
+           (:foreground "blue")))
+	"Face used to display the time in the mode line.")
 
-    ;; This causes the current time in the mode line to be displayed in
-    ;; `egoge-display-time-face' to make it stand out visually.
-    ;; Clock is set to 24 hour mode and two | to act as separators with
-    ;; the system load indicator
+      ;; This causes the current time in the mode line to be displayed in
+      ;; `egoge-display-time-face' to make it stand out visually.
+      ;; Clock is set to 24 hour mode and two | to act as separators with
+      ;; the system load indicator
 
-    (setq display-time-string-forms
-          '((propertize (concat 24-hours":"minutes"\|"load"\|")
-                        'face 'egoge-display-time)))
+      (setq display-time-string-forms
+            '((propertize (concat 24-hours":"minutes"\|"load"\|")
+                          'face 'egoge-display-time)))
 
-    ;; This line has to be under the two functions above.  Execution order matters in Elisp.
-    (display-time-mode 1)
-    #+END_SRC
+      ;; This line has to be under the two functions above.  Execution order matters in Elisp.
+      (display-time-mode 1)
+      #+END_SRC
 
-    #+RESULTS:
-    : t
+      #+RESULTS:
+      : t
 
 *** Useful Functions
 ***** Winner Mode Wins!
@@ -75,6 +83,9 @@
         (require 'ivy)
         (ivy-mode t)
         (setq magit-completing-read-function 'ivy-completing-read)
+
+        ;;Integrate projectile into Ivy
+        (counsel-projectile-on)
       #+END_SRC
 ***** [[https://github.com/magnars/expand-region.el][Expand Region]]
       All sorts of goodies can be found in the docs for er/* functions.
@@ -138,6 +149,12 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (company-quickhelp-mode 1)
       #+END_SRC
+* [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
+  These are highly personalizable, and should probaby be saved on a per-machine basis.
+*** This init file
+    #+BEGIN_SRC emacs-lisp
+    (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
+    #+END_SRC
       
 * External Programs
 *** Ledger
@@ -256,20 +273,6 @@ buffer is not visiting a file."
     #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
-    
-* R
-
-*** packages: 
-
-***** ess
-
-***** 
-* [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
-  These are highly personalizable, and should probaby be saved on a per-machine basis.
-*** This init file
-    #+BEGIN_SRC emacs-lisp
-    (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
-    #+END_SRC
 * Eshell
 *** TODO Get rid of seperate Eshell file
 *** Nyan prompt
@@ -277,6 +280,58 @@ buffer is not visiting a file."
     #+BEGIN_SRC emacs-lisp
     (add-hook 'eshell-load-hook 'nyan-prompt-enable)
     #+END_SRC
+    
+* Language Specfic
+*** Ruby and Rails
+    Most recentrly redone using [[https://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html][this tutorial]]
+***** Syntax Checking
+      Use [[https://github.com/flymake/emacs-flymake][flymake]]
+      #+BEGIN_SRC emacs-lisp
+        (require 'flymake-ruby)
+        (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+      #+END_SRC
+***** RVM 							    :keybind:
+      #+BEGIN_SRC emacs-lisp
+        (require 'rvm)
+        ;; use rvm’s default ruby for the current Emacs session
+        (rvm-use-default)
+        ;; Integrate RVM into my Ruby editing experience
+        ;; http://devblog.avdi.org/2011/10/11/rvm-el-and-inf-ruby-emacs-reboot-14/
+
+        (add-hook 'ruby-mode-hook
+            (lambda () (rvm-activate-corresponding-ruby)))
+
+        (global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
+        ;; Stolen from https://rejeep.github.io/emacs/elisp/ruby/2010/11/10/ruby-interpolation.html
+
+        (defun ruby-interpolate ()
+          "In a double quoted string, interpolate."
+                (interactive)
+                (insert "#")
+                (when (and
+                   (looking-back "\".*")
+                   (looking-at ".*\""))
+                  (insert "{}")
+                  (backward-char 1)))
+          ; (define-key ruby-mode-map (kbd "#") 'ruby-interpolate)
+
+      #+END_SRC
+***** [[https://github.com/bbatsov/projectile][Projectile]]
+      #+BEGIN_SRC emacs-lisp
+      (projectile-global-mode)
+      #+END_SRC
+***** [[https://github.com/bbatsov/rubocop-emacs][Rubocop]]
+      #+BEGIN_SRC emacs-lisp
+        (require 'rubocop)
+        (add-hook 'ruby-mode-hook #'rubocop-mode)
+      #+END_SRC
+***** 
+*** R  
+***** packages: 
+
+******* ess
+
+********* 
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
   now everything else in my old init goes here. It is also part of the
@@ -285,9 +340,6 @@ buffer is not visiting a file."
 
     ;; Org mode configuration
     (load "my_org")
-
-    ;; All ruby stuff
-    (load "rubies")
 
     ;;Eshell!
     (load "my_eshell")
