@@ -24,7 +24,9 @@
       (require 'package)
       (require 'use-package)
       (add-to-list 'package-archives
-                   '("melpa" . "https://melpa.org/packages/"))
+                   '("melpa" . "https://melpa.org/packages/") t )
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
       (when (< emacs-major-version 24)
         ;; For important compatibility libraries like cl-lib
         (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
@@ -47,7 +49,7 @@
                        (setq sml/vc-mode-show-backend t)
                        (setq sml/no-confirm-load-theme t)
                        (setq sml/shorten-directory t)
-                       (setq sml/shorten-modes t) ;interferes with Nyan Mode
+                       ;(setq sml/shorten-modes t) ;interferes with Nyan Mode
                        (setq sml/name-width '40)
                        (setq sml/mode-width 'full)
 
@@ -95,14 +97,15 @@
       #+END_SRC
 ***** Now trying Ivy: Ido Mode WAS TeH Bomb
       #+BEGIN_SRC emacs-lisp
-        ;;(require 'ido)
-        ;;(ido-mode f)
-        (require 'ivy)
-        (ivy-mode t)
-        (setq magit-completing-read-function 'ivy-completing-read)
+(require 'ivy)
+(ivy-mode t)
+(setq magit-completing-read-function 'ivy-completing-read)
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
 
-        ;;Integrate projectile into Ivy
-        (counsel-projectile-on)
+
+;;Integrate projectile into Ivy
+(counsel-projectile-on)
       #+END_SRC
 ***** [[https://github.com/magnars/expand-region.el][Expand Region]]
       All sorts of goodies can be found in the docs for er/* functions.
@@ -128,16 +131,17 @@
           (global-set-key (kbd "<C-S-down>")   'buf-move-down)
           (global-set-key (kbd "<C-S-left>")   'buf-move-left)
           (global-set-key (kbd "<C-S-right>")  'buf-move-right)
-          (global-set-key (kbd "<C-tab>") #'other-window)
+          (global-set-key (kbd "<C-tab>")      'other-window)
           ;; Keep C-tab in org-mode
-          (define-key org-mode-map (kbd "<C-tab>") #'other-window)
+          (define-key org-mode-map (kbd "<C-tab>") 'other-window)
         #+END_SRC
 
 ***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
       #+BEGIN_SRC emacs-lisp
-      (load "window_number")
+      ;Window Number Mode is now a package, does not need to be loaded.
+      ;(load "window-number")
       (require 'window-number)
-      (window-number-mode 1)
+      (window-number-mode)
       #+END_SRC
 ***** [[ http://emacsredux.com/blog/2013/04/21/edit-files-as-root/][Sudo Edit]]
          #+BEGIN_SRC emacs-lisp
@@ -172,7 +176,7 @@ buffer is not visiting a file."
     #+BEGIN_SRC emacs-lisp
     (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
     #+END_SRC
-      
+    
 * External Programs
 *** Ledger
     #+BEGIN_SRC emacs-lisp
@@ -221,7 +225,7 @@ buffer is not visiting a file."
       Then you need to require them. Note, for sh, the required file is ob-shell, not ob-sh.
       #+BEGIN_SRC emacs-lisp
         (require 'ob-ruby)
-        (require 'ob-shell)
+        ;(require 'ob-shell)
         (require 'ob-R)
         (require 'ob-python)
       #+END_SRC
@@ -362,7 +366,7 @@ buffer is not visiting a file."
     (load "my_eshell")
 
     ;;Window number!
-    (load "window_number")
+    ;(load "window_number")
     (require 'window-number)
     (window-number-mode 1)
     ;; Remaps the default window switch key to use window-number mode
