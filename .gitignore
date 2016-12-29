@@ -21,3 +21,7 @@ elpa/archives*
 ido.last~
 literate_init.el
 elpa/archives/*
+abbrev*
+network*
+*.eld
+recentf*
