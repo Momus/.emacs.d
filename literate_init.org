@@ -30,15 +30,21 @@
     '("melpa" . "https://melpa.org/packages/") t )
     (add-to-list 'package-archives
     '("marmalade" . "http://marmalade-repo.org/packages/") t)
-    
     (require 'package)
-    (require 'use-package)
 
       (when (< emacs-major-version 24)
         ;; For important compatibility libraries like cl-lib
         (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
       (package-initialize)
     #+END_SRC
+    
+*** Advanced Configutration
+    In theory use-package will make configuting things even more elegant.
+    #+BEGIN_SRC emacs-lisp
+      (require 'use-package)
+    #+END_SRC
+
+
 *** Client Server Labor Relations
 ***** Fix ido so it shares buffers amongst frames. [[http://stackoverflow.com/questions/27465616/emacsclient-will-not-allow-two-different-frames-to-have-the-same-file-open][Source]]
       #+BEGIN_SRC emacs-lisp
@@ -401,7 +407,6 @@ buffer is not visiting a file."
       (setq auto-mode-alist (cons '("\\.xsl$" . nxml-mode) auto-mode-alist))
       (setq auto-mode-alist (cons '("\\.xhtml$" . nxml-mode) auto-mode-alist))
       (setq auto-mode-alist (cons '("\\.page$" . nxml-mode) auto-mode-alist))
-
       (autoload 'xml-mode "nxml" "XML editing mode" t)
 
       (eval-after-load 'rng-loc
@@ -415,31 +420,20 @@ buffer is not visiting a file."
   plan to get rid of config files in the elisp directory and put most of that here.
   #+BEGIN_SRC emacs-lisp
 
-        ;; Org mode configuration
-        (load "my_org")
-
-        ;;Eshell!
-        (load "my_eshell")
-
-
-
-
-        ;; We like desktop save mode, however, it is a bad idea to keep saved
-        ;; desktops in a git repository.  So while it is enabled, make sure that
-        ;; the desktop directory is in git ignore
-
+    ;; We like desktop save mode, however, it is a bad idea to keep saved
+    ;; desktops in a git repository.  So while it is enabled, make sure that
+    ;; the desktop directory is in git ignore
         (desktop-save-mode 1)
         (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
 
-        ;;Edit browser text-areas with Emacs!
-        (require 'edit-server)
-        (edit-server-start)
+
+    ;;Edit browser text-areas with Emacs!
+    ;(require 'edit-server)
+    ;(edit-server-start)
+    ;;Some basic config options
 
 
-        ;;Some basic config options
-
-
-                                                ;A steady light, not blinking parens
+    ;; A steady light, not blinking parens
         (show-paren-mode t)
         (setq show-paren-style 'expression)
         (setq show-paren-delay 0)
@@ -447,10 +441,10 @@ buffer is not visiting a file."
                                                 ;No splash screen at start-up
         (setq inhibit-startup-screen t)
 
-        ;;;Take off  the training wheels for a while longer
+    ;; Take off  the training wheels for a while longer
         (menu-bar-mode -1)
 
-                                                ; Save space
+    ;; Save space
         (tool-bar-mode -1)
 
         ;;; AUCTeX

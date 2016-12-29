@@ -25,3 +25,4 @@ abbrev*
 network*
 *.eld
 recentf*
+elpa/archives/gnu/*

@@ -80,7 +80,11 @@
 	 ((:keywords "async")
 	  (:url . "http://elpa.gnu.org/packages/async.html"))])
  (auctex .
+<<<<<<< HEAD
 	 [(11 89 7)
+=======
+	 [(11 89 6)
+>>>>>>> 66fce183ed56df592946bf1d9b70c8e80f940efd
 	  nil "Integrated environment for *TeX*" tar
 	  ((:url . "http://www.gnu.org/software/auctex/"))])
  (aumix-mode .
@@ -291,7 +295,11 @@
 	     ((:url . "http://elpa.gnu.org/packages/ediprolog.html")
 	      (:keywords "languages" "processes"))])
  (el-search .
+<<<<<<< HEAD
 	    [(1 2)
+=======
+	    [(1 0 1)
+>>>>>>> 66fce183ed56df592946bf1d9b70c8e80f940efd
 	     ((emacs
 	       (25))
 	      (stream
@@ -342,7 +350,11 @@
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
  (exwm .
+<<<<<<< HEAD
        [(0 12)
+=======
+       [(0 11)
+>>>>>>> 66fce183ed56df592946bf1d9b70c8e80f940efd
 	((xelb
 	  (0 12)))
 	"Emacs X Window Manager" tar
@@ -645,7 +657,11 @@
 	     ((:url . "https://github.com/michael-heerdegen/on-screen.el")
 	      (:keywords "convenience"))])
  (org .
+<<<<<<< HEAD
       [(20161214)
+=======
+      [(20161102)
+>>>>>>> 66fce183ed56df592946bf1d9b70c8e80f940efd
        nil "Outline-based notes management and organizer" tar nil])
  (osc .
       [(0 1)
@@ -910,7 +926,11 @@
 		 ((:url . "http://elpa.gnu.org/packages/url-http-ntlm.html")
 		  (:keywords "comm" "data" "processes" "hypermedia"))])
  (validate .
+<<<<<<< HEAD
 	   [(1 0 2)
+=======
+	   [(1 0 0)
+>>>>>>> 66fce183ed56df592946bf1d9b70c8e80f940efd
 	    ((emacs
 	      (24 1))
 	     (cl-lib
