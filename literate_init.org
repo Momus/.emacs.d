@@ -4,6 +4,11 @@
 #+DATE:        2016-03-15 Tue
 #+DESCRIPTION: Managing my .emacs the literate programming way with org-mode.
 
+* TODO [0/3] Fix the package dependcency problem. 
+  Have to reinstall packages in this order:
+  - [ ] use-package :: that's what I need to fix this in the first place
+  - [ ] buffer-move :: move the buffers
+  - [ ] magit :: really should just be part of Emacs
 * General Settings
   Definitions found here apply to all emacs sessions.
 *** Personal Information
@@ -30,13 +35,12 @@
     		     '("org" . "http://orgmode.org/elpa/") t)
     	(package-initialize)
     #+END_SRC
-
+    
 *** Advanced Configutration
     In theory use-package will make configuting things even more elegant.
     #+BEGIN_SRC emacs-lisp
       (require 'use-package)
     #+END_SRC
-
 
 *** Client Server Labor Relations
 ***** Fix ido so it shares buffers amongst frames. [[http://stackoverflow.com/questions/27465616/emacsclient-will-not-allow-two-different-frames-to-have-the-same-file-open][Source]]
@@ -55,7 +59,7 @@
                        (setq sml/vc-mode-show-backend t)
                        (setq sml/no-confirm-load-theme t)
                        (setq sml/shorten-directory t)
-                       (setq sml/shorten-modes t) ;interferes with Nyan Mode
+                       ;(setq sml/shorten-modes t) ;interferes with Nyan Mode
                        (setq sml/name-width '40)
                        (setq sml/mode-width 'full)
 
@@ -103,14 +107,15 @@
       #+END_SRC
 ***** Now trying Ivy: Ido Mode WAS TeH Bomb
       #+BEGIN_SRC emacs-lisp
-        ;;(require 'ido)
-        ;;(ido-mode f)
-        (require 'ivy)
-        (ivy-mode t)
-        (setq magit-completing-read-function 'ivy-completing-read)
+(require 'ivy)
+(ivy-mode t)
+(setq magit-completing-read-function 'ivy-completing-read)
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
 
-        ;;Integrate projectile into Ivy
-        (counsel-projectile-on)
+
+;;Integrate projectile into Ivy
+(counsel-projectile-on)
       #+END_SRC
 ***** [[https://github.com/magnars/expand-region.el][Expand Region]]
       All sorts of goodies can be found in the docs for er/* functions.
@@ -136,16 +141,17 @@
           (global-set-key (kbd "<C-S-down>")   'buf-move-down)
           (global-set-key (kbd "<C-S-left>")   'buf-move-left)
           (global-set-key (kbd "<C-S-right>")  'buf-move-right)
-          (global-set-key (kbd "<C-tab>") #'other-window)
+          (global-set-key (kbd "<C-tab>")      'other-window)
           ;; Keep C-tab in org-mode
-          (define-key org-mode-map (kbd "<C-tab>") #'other-window)
+          (define-key org-mode-map (kbd "<C-tab>") 'other-window)
         #+END_SRC
 
 ***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
       #+BEGIN_SRC emacs-lisp
-      (load "window_number")
+      ;Window Number Mode is now a package, does not need to be loaded.
+      ;(load "window-number")
       (require 'window-number)
-      (window-number-mode 1)
+      (window-number-mode)
       #+END_SRC
 ***** [[ http://emacsredux.com/blog/2013/04/21/edit-files-as-root/][Sudo Edit]]
          #+BEGIN_SRC emacs-lisp
@@ -170,6 +176,19 @@ buffer is not visiting a file."
         (with-eval-after-load 'company
           (add-to-list 'company-backends 'company-elm))
       #+END_SRC
+***** Window number mode
+      Now installed from Melpa
+      #+BEGIN_SRC emacs-lisp
+        (require 'window-number)
+        (window-number-mode 1)
+        ;; Remaps the default window switch key to use window-number mode
+        (global-set-key "\C-xo"  'window-number-switch)
+        ;; Use the Meta key to switch between frames.
+        (window-number-meta-mode t)
+
+      #+END_SRC
+
+
 ***** TODO Enable Company Quickhelp (from Melpa) 
       #+BEGIN_SRC emacs-lisp
         (company-quickhelp-mode 1)
@@ -180,7 +199,7 @@ buffer is not visiting a file."
     #+BEGIN_SRC emacs-lisp
     (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
     #+END_SRC
-      
+    
 * External Programs
 *** Ledger
     #+BEGIN_SRC emacs-lisp
@@ -219,8 +238,7 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (org-babel-do-load-languages
          'org-babel-load-languages
-         '((sh . t)
-           (R . t)
+         '((R . t)
            (ruby . t)
            (python . t)
            )
@@ -299,20 +317,35 @@ buffer is not visiting a file."
      (global-set-key (kbd "C-x g") 'magit-status)
     #+END_SRC
 * Eshell
+*** We start Eshell so much, it really needs its own keybinding :keybind:
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-c e") 'eshell)
+    #+END_SRC
+
 *** TODO Get rid of seperate Eshell file
 *** Nyan prompt
     Because why not?
     #+BEGIN_SRC emacs-lisp
     (add-hook 'eshell-load-hook 'nyan-prompt-enable)
     #+END_SRC
-    
+* Language Independent
+***** [[https://github.com/bbatsov/projectile][Projectile]]
+      #+BEGIN_SRC emacs-lisp
+      (projectile-global-mode)
+      #+END_SRC
+***** [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Flycheck]] is the now, as flymake seems caput.
+      #+BEGIN_SRC emacs-lisp
+      (global-flycheck-mode)
+      #+END_SRC
+***** 
+
 * Language Specfic
 *** Ruby and Rails
     Most recentrly redone using [[https://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html][this tutorial]]
 ***** Syntax Checking
-      Use [[https://github.com/flymake/emacs-flymake][flymake]]
+      Using [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][flycheck]] as flymake seems caput.
       #+BEGIN_SRC emacs-lisp
-        (require 'flymake-ruby)
+        ;(require 'flycheck-ruby)
         (add-hook 'ruby-mode-hook 'flymake-ruby-load)
       #+END_SRC
 ***** RVM 							    :keybind:
@@ -341,10 +374,6 @@ buffer is not visiting a file."
           ; (define-key ruby-mode-map (kbd "#") 'ruby-interpolate)
 
       #+END_SRC
-***** [[https://github.com/bbatsov/projectile][Projectile]]
-      #+BEGIN_SRC emacs-lisp
-      (projectile-global-mode)
-      #+END_SRC
 ***** [[https://github.com/bbatsov/rubocop-emacs][Rubocop]]
       #+BEGIN_SRC emacs-lisp
         (require 'rubocop)
@@ -353,8 +382,34 @@ buffer is not visiting a file."
 ***** 
 *** R  
 ***** packages: 
-
 ******* ess
+*** Java - emacs-eclim
+    #+BEGIN_SRC emacs-lisp
+      (require 'eclim)
+      (add-hook 'java-mode-hook 'eclim-mode)
+      (require 'eclimd)
+    #+END_SRC
+***** use company-mode with Eclim
+      #+BEGIN_SRC emacs-lisp
+        (require 'company-emacs-eclim)
+        (company-emacs-eclim-setup)
+      #+END_SRC
+***** 
+
+*** XML
+    Configured using [[https://fedoraproject.org/wiki/How_to_use_Emacs_for_XML_editing][this tutorial]]
+    Make sure all XMLis stuff is edited with nxml-mode
+    #+BEGIN_SRC emacs-lisp
+      (setq auto-mode-alist (cons '("\\.xml$" . nxml-mode) auto-mode-alist))
+      (setq auto-mode-alist (cons '("\\.xsl$" . nxml-mode) auto-mode-alist))
+      (setq auto-mode-alist (cons '("\\.xhtml$" . nxml-mode) auto-mode-alist))
+      (setq auto-mode-alist (cons '("\\.page$" . nxml-mode) auto-mode-alist))
+      (autoload 'xml-mode "nxml" "XML editing mode" t)
+
+      (eval-after-load 'rng-loc
+        '(add-to-list 'rng-schema-locating-files "~/.schema/schema.xml"))
+      (global-set-key [C-return] 'completion-at-point)
+    #+END_SRC
 
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
@@ -362,60 +417,56 @@ buffer is not visiting a file."
   plan to get rid of config files in the elisp directory and put most of that here.
   #+BEGIN_SRC emacs-lisp
 
-    ;; Org mode configuration
-    ;;(load "my_org")
-
     ;;Eshell!
     (load "my_eshell")
 
     
+
     ;; We like desktop save mode, however, it is a bad idea to keep saved
     ;; desktops in a git repository.  So while it is enabled, make sure that
     ;; the desktop directory is in git ignore
+        (desktop-save-mode 1)
+        (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
 
-    (desktop-save-mode 1)
-    (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
 
     ;;Edit browser text-areas with Emacs!
     ;(require 'edit-server)
     ;(edit-server-start)
-
-
     ;;Some basic config options
 
 
-                                            ;A steady light, not blinking parens
-    (show-paren-mode t)
-    (setq show-paren-style 'expression)
-    (setq show-paren-delay 0)
+    ;; A steady light, not blinking parens
+        (show-paren-mode t)
+        (setq show-paren-style 'expression)
+        (setq show-paren-delay 0)
 
-                                            ;No splash screen at start-up
-    (setq inhibit-startup-screen t)
+                                                ;No splash screen at start-up
+        (setq inhibit-startup-screen t)
 
-    ;;;Take off  the training wheels for a while longer
-    (menu-bar-mode -1)
+    ;; Take off  the training wheels for a while longer
+        (menu-bar-mode -1)
 
-                                            ; Save space
-    (tool-bar-mode -1)
+    ;; Save space
+        (tool-bar-mode -1)
 
-    ;;; AUCTeX
-    ;; Customary Customization, p. 1 and 16 in the manual
-    ;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
+        ;;; AUCTeX
+        ;; Customary Customization, p. 1 and 16 in the manual
+        ;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
 
-;;    (setq TeX-parse-self t); Enable parse on load.
-;;    (setq TeX-auto-save t); Enable parse on save.
-;;    (setq-default TeX-master nil)
+    ;;    (setq TeX-parse-self t); Enable parse on load.
+    ;;    (setq TeX-auto-save t); Enable parse on save.
+    ;;    (setq-default TeX-master nil)
 
-;;    (setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
+    ;;    (setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
 
-;;    (add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
- ;;   (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
-;;    (add-hook 'TeX-mode-hook
-;;              (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
+    ;;    (add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
+     ;;   (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
+    ;;    (add-hook 'TeX-mode-hook
+    ;;              (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
 
-    ;;; RefTeX
-    ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
- ;;   (add-hook 'TeX-mode-hook 'turn-on-reftex)
+        ;;; RefTeX
+        ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
+     ;;   (add-hook 'TeX-mode-hook 'turn-on-reftex)
 
 
   #+END_SRC
