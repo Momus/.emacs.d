@@ -241,6 +241,7 @@ buffer is not visiting a file."
          '((R . t)
            (ruby . t)
            (python . t)
+           (shell . t)
            )
          )
       #+END_SRC
