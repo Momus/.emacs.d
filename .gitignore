@@ -26,3 +26,5 @@ network*
 *.eld
 recentf*
 elpa/archives/gnu/*
+places
+backups*
