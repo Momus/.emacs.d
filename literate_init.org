@@ -90,7 +90,7 @@
 	#+END_SRC
 ***** Rich minority mode
       #+BEGIN_SRC emacs-lisp
-      (rich-minority-mode 1)
+        (rich-minority-mode 1)
       #+END_SRC
 ***** How about a nice clock?
       #+BEGIN_SRC emacs-lisp
