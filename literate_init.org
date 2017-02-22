@@ -149,7 +149,6 @@
 ***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
       #+BEGIN_SRC emacs-lisp
       ;Window Number Mode is now a package, does not need to be loaded.
-      ;(load "window-number")
       (require 'window-number)
       (window-number-mode)
       #+END_SRC
