@@ -1,16 +1,16 @@
 +TITLE:       Literate Emacs Configuration
 #+AUTHOR:      Dmitri Brengauz
 #+EMAIL:       dmitri at momus dot net
-#+DATE:        2016-03-1                                                                5 Tue
-#+DESCRIPTION: Managing my .emac                                                        s the literate programming way with org-mode.
+#+DATE:        2016-03-15 Tue
+#+DESCRIPTION: Managing my .emacs the literate programming way with org-mode.
 
-                                                                                        * TODO [0/3] Fix the package dependcency problem. 
-  Hav                                                                                   e to reinstall packages in this order:
-  - [ ] use-package :                                                                   : that's what I need to fix this in the first place
-  - [ ] buffer-move :: mov                                                              e the buffers
+* TODO [0/3] Fix the package dependcency problem. 
+  Have to reinstall packages in this order:
+  - [ ] use-package :: that's what I need to fix this in the first place
+  - [ ] buffer-move :: move the buffers
   - [ ] magit :: really should just be part of Emacs
 * General Settings
-  Definitions found here appl                                                           y to all emacs sessions.
+  Definitions found here apply to all emacs sessions.
 *** Personal Information
     #+NAME: literate_init.el
     #+BEGIN_SRC emacs-lisp :tangle yes
@@ -30,44 +30,44 @@
     	(add-to-list 'package-archives
                          '("melpa" . "https://melpa.org/packages/"))
     	(add-to-list 'package-archives
-                         '("marmalade" . "http://marmalade-repo.org/packages/"          ) t)
+                         '("marmalade" . "http://marmalade-repo.org/packages/") t)
     	(add-to-list 'package-archives 
-    		     '("org" . "http://orgmode.org/elpa/"                               ) t)
+    		     '("org" . "http://orgmode.org/elpa/") t)
     	(package-initialize)
     #+END_SRC
     
 *** Advanced Configutration
-    I                                                                                   n theory use-package will make configuting things even more elegant.
+    In theory use-package will make configuting things even more elegant.
     #+BEGIN_SRC emacs-lisp
       (require 'use-package)
     #+END_SRC
-                                                                                          There are better defaults, let's use them.
+    There are better defaults, let's use them.
     #+BEGIN_SRC emacs-lisp
 ;(use-package better-defautls
-;  :ensur                                                                               e t)
+;  :ensure t)
 (require 'better-defaults)
     #+END_SRC
 
-*** Mak                                                                                 e the kill ring work with the OS clippboard
+*** Make the kill ring work with the OS clippboard
     #+BEGIN_SRC emacs-lisp
-      (setq ;; makes killing/yanking interact wit                                       h the clipboard
-       x-select-enable-clipboar                                                         d t
+      (setq ;; makes killing/yanking interact with the clipboard
+       x-select-enable-clipboard t
  
-       ;; I'm actually not sure wha                                                     t this does but it's recommended?
-       x-select-enable-primar                                                           y t
+       ;; I'm actually not sure what this does but it's recommended?
+       x-select-enable-primary t
 
-       ;; Save clipboard strings into kill ring before replacin                         g them.
-       ;; When one selects something in another progra                                  m to paste it into Emacs,
+       ;; Save clipboard strings into kill ring before replacing them.
+       ;; When one selects something in another program to paste it into Emacs,
        ;; but kills something in Emacs before actually pasting it,
-       ;                                                                                ; this selection is gone unless this variable is non-nil
-       save-interprogram-paste-before-kil                                               l t
+       ;; this selection is gone unless this variable is non-nil
+       save-interprogram-paste-before-kill t
 
        ;; Shows all options when running apropos. For more info,
        ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html
-       apropos-do-al                                                                    l t
+       apropos-do-all t
 
        ;; Mouse yank commands yank at point instead of at click.
-       mouse-yank-at-poin                                                               t t)
+       mouse-yank-at-point t)
     #+END_SRC
 *** Client Server Labor Relations
 ***** Fix ido so it shares buffers amongst frames. [[http://stackoverflow.com/questions/27465616/emacsclient-will-not-allow-two-different-frames-to-have-the-same-file-open][Source]]
@@ -81,13 +81,13 @@
 	#+BEGIN_SRC emacs-lisp
           (use-package smart-mode-line
                        ;:quelpa (smart-mode-line :repo "Bruce-Connor/smart-mode-line" :fetcher github)
-:ensur                                                                                  e t
+:ensure t
 
                        :init
-                       (setq sml/vc-mode-show-backen                                    d t)
-                       (setq sml/no-confirm-load-them                                   e t)
-                       (setq sml/shorten-director                                       y t)
-                       ;(setq sml/shorten-mode                                          s t) ;interferes with Nyan Mode
+                       (setq sml/vc-mode-show-backend t)
+                       (setq sml/no-confirm-load-theme t)
+                       (setq sml/shorten-directory t)
+                       ;(setq sml/shorten-modes t) ;interferes with Nyan Mode
                        (setq sml/name-width '40)
                        (setq sml/mode-width 'full)
 
@@ -104,41 +104,41 @@
       (defface egoge-display-time
 	'((((type x w32 mac))
            (:foreground "#060525" :inherit bold))
-          (((typ                                                                        e tty))
+          (((type tty))
            (:foreground "blue")))
-	"Face use                                                                       d to display the time in the mode line.")
+	"Face used to display the time in the mode line.")
 
-      ;                                                                                 ; This causes the current time in the mode line to be displayed in
-      ;; `egoge-display-time-face                                                       ' to make it stand out visually.
-      ;; Clock is se                                                                    t to 24 hour mode and two | to act as separators with
-      ;                                                                                 ; the system load indicator
+      ;; This causes the current time in the mode line to be displayed in
+      ;; `egoge-display-time-face' to make it stand out visually.
+      ;; Clock is set to 24 hour mode and two | to act as separators with
+      ;; the system load indicator
 
       (setq display-time-string-forms
             '((propertize (concat 24-hours":"minutes"\|"load"\|")
                           'face 'egoge-display-time)))
 
-      ;                                                                                 ; This line has to be under the two functions above.  Execution order matters in Elisp.
+      ;; This line has to be under the two functions above.  Execution order matters in Elisp.
       (display-time-mode 1)
       #+END_SRC
 
       #+RESULTS:
-                                                                                        : t
+      : t
 
 *** Useful Functions
 ***** Winner Mode Wins!
       #+BEGIN_SRC emacs-lisp
-      (when (fboundp 'winner-mode) ;Compa                                               t test
+      (when (fboundp 'winner-mode) ;Compat test
         (winner-mode 1))
 
-      ;;the 'fboundup' functio                                                          n test for Emacsen (specifically XEmacs) that don't
+      ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
       ;; have winner-mode.
       #+END_SRC
-***** No                                                                                w trying Ivy: Ido Mode WAS TeH Bomb
+***** Now trying Ivy: Ido Mode WAS TeH Bomb
       #+BEGIN_SRC emacs-lisp
         (require 'ivy)
-        (ivy-mod                                                                        e t)
+        (ivy-mode t)
         (setq magit-completing-read-function 'ivy-completing-read)
-        (setq ivy-use-virtual-buffer                                                    s t)
+        (setq ivy-use-virtual-buffers t)
         (setq ivy-count-format "(%d/%d) ")
 
         ;;Integrate projectile into Ivy
@@ -147,19 +147,19 @@
         (global-set-key (kbd "M-x") 'counsel-M-x)
       #+END_SRC
 ***** [[https://github.com/magnars/expand-region.el][Expand Region]]
-      All sorts of goodies can be found i                                               n the docs for er/* functions.
+      All sorts of goodies can be found in the docs for er/* functions.
       #+BEGIN_SRC emacs-lisp
         (require 'expand-region)
         (global-set-key (kbd "C-=") 'er/expand-region)
       #+END_SRC
 ******* Buffer-move 
-          [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around . This has it's own github
-          module, which will hav                                                        e to be pulled for updates.
+          [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
+          module, which will have to be pulled for updates.
           #+BEGIN_SRC emacs-lisp
             (load "buffer-move.el")
           #+END_SRC
 
-          We want current windo                                                         w to switch to previous buffer
+          We want current window to switch to previous buffer
           instead of swapping buffers of both windows:
           #+BEGIN_SRC emacs-lisp
             (setq buffer-move-behavior 'move)
@@ -177,7 +177,7 @@
 
 ***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
       #+BEGIN_SRC emacs-lisp
-      ;Window Number Mode is now a package, does not nee                                d to be loaded.
+      ;Window Number Mode is now a package, does not need to be loaded.
       ;(load "window-number")
       (require 'window-number)
       (window-number-mode)
@@ -188,10 +188,10 @@
         ;; Lisp-friendly hippie expand
         (setq hippie-expand-try-functions-list
         '(try-expand-dabbrev
-                                                                                          try-expand-dabbrev-all-buffers
-                                                                                          try-expand-dabbrev-from-kill
-                                                                                          try-complete-lisp-symbol-partially
-                                                                                          try-complete-lisp-symbol))
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol))
       #+END_SRC
 ***** Rainbow Delimiters!
       yay rainbows!
@@ -202,8 +202,8 @@
          #+BEGIN_SRC emacs-lisp
    (defun sudo-edit (&optional arg)
   "Edit currently visited file as root.
-With a prefix ARG prompt for a fil                                                      e to visit.
-Will also prompt for a fil                                                              e to visit if current
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
 buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
@@ -213,16 +213,16 @@ buffer is not visiting a file."
 
 (global-set-key (kbd "C-x C-r") 'sudo-edit)
        #+END_SRC
-*** Save your place i                                                                   n the file
-    Don't forge                                                                         t to add the ~/.emacs.d/places file to .gitignore
+*** Save your place in the file
+    Don't forget to add the ~/.emacs.d/places file to .gitignore
     #+BEGIN_SRC emacs-lisp
       (require 'saveplace)
-      (setq-default save-plac                                                           e t)
-      ;; kee                                                                            p track of saved places in ~/.emacs.d/places
+      (setq-default save-place t)
+      ;; keep track of saved places in ~/.emacs.d/places
       (setq save-place-file (concat user-emacs-directory "places"))
     #+END_SRC
 *** Backups
-    remembe                                                                             r to add the backups directory to .gitignore
+    remember to add the backups directory to .gitignore
     #+BEGIN_SRC emacs-lisp
         (setq backup-directory-alist `(("." . ,(concat user-emacs-directory
                     				       "backups"))))
@@ -230,7 +230,7 @@ buffer is not visiting a file."
       (setq create-lockfiles nil)
     #+END_SRC
 *** On-start global settings
-***** Autocompletion better o                                                           n than off.
+***** Autocompletion better on than off.
       Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
       #+BEGIN_SRC emacs-lisp
         (add-hook 'after-init-hook 'global-company-mode)
@@ -242,21 +242,21 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (require 'window-number)
         (window-number-mode 1)
-        ;; Remap                                                                        s the default window switch key to use window-number mode
+        ;; Remaps the default window switch key to use window-number mode
         (global-set-key "\C-xo"  'window-number-switch)
-        ;; Us                                                                           e the Meta key to switch between frames.
-        (window-number-meta-mod                                                         e t)
+        ;; Use the Meta key to switch between frames.
+        (window-number-meta-mode t)
 
       #+END_SRC
 
 
-****                                                                                    * TODO Enable Company Quickhelp (from Melpa) 
+***** TODO Enable Company Quickhelp (from Melpa) 
       #+BEGIN_SRC emacs-lisp
         (company-quickhelp-mode 1)
       #+END_SRC
 * [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
-                                                                                          These are highly personalizable, and should probaby be saved on a per-machine basis.
-**                                                                                      * This init file
+  These are highly personalizable, and should probaby be saved on a per-machine basis.
+*** This init file
     #+BEGIN_SRC emacs-lisp
     (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
     #+END_SRC
@@ -264,54 +264,54 @@ buffer is not visiting a file."
 * External Programs
 *** Ledger
     #+BEGIN_SRC emacs-lisp
-      (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger                     " t)
+      (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
       (add-to-list 'load-path
          (expand-file-name "~/usr/src/ledger/lisp/"))
          (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
     #+END_SRC
 *** Web Browser
-****                                                                                    * TODO [0/1]Set Conkeror as default browser. 
+***** TODO [0/1]Set Conkeror as default browser. 
       - [ ] Make clicked links open in existing conkeror process if
         one exist in same StumpWM window group.
 * Org Mode
 *** Outline View
-    Generally keep it [[http://orgmode.org/manual/Clean-view.html][clean]] withou       t too many bells and whistles
+    Generally keep it [[http://orgmode.org/manual/Clean-view.html][clean]] without too many bells and whistles
     #+BEGIN_SRC emacs-lisp
       (global-font-lock-mode 1)
       (require 'org)
       (require 'org-agenda)
       (setq org-odd-levels-only 1)
-      (setq org-indent-mod                                                              e t)
-      (setq org-hide-leading-star                                                       s t)
+      (setq org-indent-mode t)
+      (setq org-hide-leading-stars t)
     #+END_SRC
 
 *** Code Blocks
-    - Get rid of confirmation and syntax highlight code i                               n text blocks:
+    - Get rid of confirmation and syntax highlight code in text blocks:
       #+BEGIN_SRC emacs-lisp
         (setq org-confim-babel-evaluate nil
-             org-src-fontify-nativel                                                    y t
-            org-src-tab-acts-nativel                                                    y t)
+             org-src-fontify-natively t
+            org-src-tab-acts-natively t)
       #+END_SRC
     
-    - Loa                                                                               d the languages we need; emacs-lisp we get for free.
-      first you nee                                                                     d to load them:
+    - Load the languages we need; emacs-lisp we get for free.
+      first you need to load them:
       #+BEGIN_SRC emacs-lisp
         (org-babel-do-load-languages
          'org-babel-load-languages
-         '((R           . t)
-           (css         . t)
-           (ruby        . t)
-           (shell       . t)
-           (python      . t)
-           (clojure     . t)
-           (emacs-lisp  . t)))
+         '((R . t)
+           (ruby . t)
+           (python . t)
+           ;shell should be on by defult.
+           ;(shell . t)
+           )
+         )
       #+END_SRC
-      Then you need to require them.
+      Then you need to require them. Shell should be installed by
+      default.
       #+BEGIN_SRC emacs-lisp
         (require 'ob-ruby)
         (require 'ob-R)
         (require 'ob-python)
-        (require 'ob-shell)
       #+END_SRC
 
 *** Exporting
@@ -488,48 +488,37 @@ buffer is not visiting a file."
       (global-set-key [C-return] 'completion-at-point)
     #+END_SRC
 
-*** Lisps
-***** Emacs
+*** Common Lisp
+***** Point to the local SBCL installation
       #+BEGIN_SRC emacs-lisp
-      (require 'ert)
+        (setq inferior-lisp-program "/home/kwaku/usr/bin/sbcl")
+        (setq slime-contribs '(slime-fancy))
       #+END_SRC
-***** Common Lisp
-******* Point to the local SBCL installation
-        #+BEGIN_SRC emacs-lisp
-          (setq inferior-lisp-program "/home/kwaku/usr/bin/sbcl")
-          (setq slime-contribs '(slime-fancy))
-        #+END_SRC
-******* Automatically load paredit when editing a Lisp file
-        #+BEGIN_SRC emacs-lisp
-          ;; More at http://www.emacswiki.org/emacs/ParEdit
-          (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-          (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-          (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-          (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-          (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-          (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-          (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+***** Automatically load paredit when editing a Lisp file
+      #+BEGIN_SRC emacs-lisp
+        ;; More at http://www.emacswiki.org/emacs/ParEdit
+        (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+        (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+        (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+        (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+        (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+        (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+        (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
 
-          ;; eldoc-mode shows documentation in the minibuffer when writing code
-          ;; http://www.emacswiki.org/emacs/ElDoc
-          (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-          (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-          (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
-        #+END_SRC
+        ;; eldoc-mode shows documentation in the minibuffer when writing code
+        ;; http://www.emacswiki.org/emacs/ElDoc
+        (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+        (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+        (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+      #+END_SRC
 *** Clojure
 ***** Set up and configure the necessary packages.
       #+BEGIN_SRC emacs-lisp
       (use-package clojure-mode
-         :ensure t)
+         :ensure t
+         )
       (use-package cider
          :ensure t)
-      (use-package inf-clojure
-         :ensure t)
-     (defun figwheel-repl ()
-       (interactive)
-       (run-clojure "lein figwheel"))
-
-     (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
       #+END_SRC
 ***** Stuff from  [[http://www.braveclojure.com/basic-emacs/][Brave Clojure]] that needs refactoring.
       #+BEGIN_SRC emacs-lisp
