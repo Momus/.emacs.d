@@ -1,4 +1,4 @@
-+TITLE:       Literate Emacs Configuration
+#+TITLE:       Literate Emacs Configuration
 #+AUTHOR:      Dmitri Brengauz
 #+EMAIL:       dmitri at momus dot net
 #+DATE:        2016-03-15 Tue
@@ -298,13 +298,12 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (org-babel-do-load-languages
          'org-babel-load-languages
-         '((R . t)
-           (ruby . t)
-           (python . t)
-           ;shell should be on by defult.
-           ;(shell . t)
-           )
-         )
+         '((R            . t)
+           (css          . t)
+           (ruby         . t)
+           (shell        . t)
+           (python       . t)
+           (emacs-lisp   . t)))
       #+END_SRC
       Then you need to require them. Shell should be installed by
       default.
