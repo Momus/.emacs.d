@@ -230,6 +230,16 @@ buffer is not visiting a file."
       (setq create-lockfiles nil)
     #+END_SRC
 *** On-start global settings
+***** Basic screen setup
+      #+BEGIN_SRC emacs-lisp
+        (show-paren-mode t)
+        (setq show-paren-style 'expression)
+        (setq show-paren-delay 0)
+        (setq inhibit-startup-screen t)
+        ;; Take off  the training wheels for a while longer
+        (menu-bar-mode -1)
+        (tool-bar-mode -1)
+      #+END_SRC
 ***** Autocompletion better on than off.
       Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
       #+BEGIN_SRC emacs-lisp
@@ -248,7 +258,6 @@ buffer is not visiting a file."
         (window-number-meta-mode t)
 
       #+END_SRC
-
 
 ***** TODO Enable Company Quickhelp (from Melpa) 
       #+BEGIN_SRC emacs-lisp
@@ -624,6 +633,25 @@ buffer is not visiting a file."
       (custom-set-variables
        '(coffee-tab-width 2))
     #+END_SRC
+* My Own Private Functions
+*** point-int
+    Where are you in the buffer? point-int will tell you.
+    #+BEGIN_SRC emacs-lisp
+      ;;; Commentary:
+      ;;If you're cool, you say it "po-int-int"
+      ;;; Code:
+      (defun point-int ()
+        "Return the point under the cursor.
+      Interactive wrapper for \\[point]"
+        (interactive)
+        (print (point)))
+    #+END_SRC
+*** ert-it
+    This is for using ert in excerisim tests. Since it's under rapid
+    development, it is loaded from its repo on the system
+    #+BEGIN_SRC emacs-lisp
+      (load "~/repos/lisp/ert-it/ert-it.el")
+    #+END_SRC
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
   now everything else in my old init goes here. It is also part of the
@@ -649,19 +677,7 @@ buffer is not visiting a file."
 
 
     ;; A steady light, not blinking parens
-        (show-paren-mode t)
-        (setq show-paren-style 'expression)
-        (setq show-paren-delay 0)
-
-                                                ;No splash screen at start-up
-        (setq inhibit-startup-screen t)
-
-    ;; Take off  the training wheels for a while longer
-        (menu-bar-mode -1)
-
-    ;; Save space
-        (tool-bar-mode -1)
-
+    
         ;;; AUCTeX
         ;; Customary Customization, p. 1 and 16 in the manual
         ;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
