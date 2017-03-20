@@ -300,8 +300,9 @@ buffer is not visiting a file."
          '((R . t)
            (ruby . t)
            (python . t)
-           ;shell should be on by defult.
-           ;(shell . t)
+           ;;shell should be on by defult.
+           ;; but it's not
+           (shell . t)
            )
          )
       #+END_SRC
@@ -531,7 +532,7 @@ buffer is not visiting a file."
       	(add-hook 'clojure-mode-hook 'subword-mode)
 
       	;; A little more syntax highlighting
-      	(require 'clojure-mode-extra-font-locking)
+      	;(require 'clojure-mode-extra-font-locking)
 
       	;; syntax hilighting for midje
       	(add-hook 'clojure-mode-hook
