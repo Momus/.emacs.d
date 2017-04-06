@@ -244,8 +244,8 @@ buffer is not visiting a file."
       Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
       #+BEGIN_SRC emacs-lisp
         (add-hook 'after-init-hook 'global-company-mode)
-        (with-eval-after-load 'company
-          (add-to-list 'company-backends 'company-elm))
+        ;(with-eval-after-load 'company
+        ;  (add-to-list 'company-backends 'company-elm))
       #+END_SRC
 ***** Window number mode
       Now installed from Melpa
@@ -465,21 +465,42 @@ buffer is not visiting a file."
         (add-hook 'ruby-mode-hook #'rubocop-mode)
       #+END_SRC
 ***** 
-*** R  
-***** packages: 
-******* ess
+*** R (ESS)
+    #+BEGIN_SRC emacs-lisp
+      (use-package ess
+        :ensure t
+        :init (require 'ess-site))
+    #+END_SRC
+    
+    TODO: This should fix this [[https://github.com/jimhester/lintr/issues/79][bug]], but it dosen't
+    #+BEGIN_SRC emacs-lisp
+    (setq  flycheck-lintr-caching nil)
+    #+END_SRC
+
 *** Java - emacs-eclim
     #+BEGIN_SRC emacs-lisp
       (require 'eclim)
       (add-hook 'java-mode-hook 'eclim-mode)
+
+      (setq eclimd-default-workspace '"~/usr/src/java/workspace")
+
       (require 'eclimd)
     #+END_SRC
 ***** use company-mode with Eclim
       #+BEGIN_SRC emacs-lisp
+        ;; Adjust Eclim for non-standard Eclipse directories.
+        (add-to-list 'eclim-eclipse-dirs '"~/usr/opt/eclipse")
+        (setq eclim-executable '"~/usr/opt/eclipse/eclim")
+        ;; Display compitation error messages in the echo area:
+        (setq help-at-pt-display-when-idle t)
+        (setq help-at-pt-timer-delay 0.1)
+        (help-at-pt-set-timer)
+
+        ;;Auto complete is through Company Mode
         (require 'company-emacs-eclim)
         (company-emacs-eclim-setup)
       #+END_SRC
-***** 
+
 
 *** XML
     Configured using [[https://fedoraproject.org/wiki/How_to_use_Emacs_for_XML_editing][this tutorial]]
@@ -647,8 +668,8 @@ buffer is not visiting a file."
         (print (point)))
     #+END_SRC
 *** ert-it
-    This is for using ert in excerisim tests. Since it's under rapid
-    development, it is loaded from its repo on the system
+    This is for using ert in excerisim tests. Since it's under "rapid
+    development," it is loaded from its repo on the system
     #+BEGIN_SRC emacs-lisp
       (load "~/repos/lisp/ert-it/ert-it.el")
     #+END_SRC
@@ -674,28 +695,5 @@ buffer is not visiting a file."
     ;(require 'edit-server)
     ;(edit-server-start)
     ;;Some basic config options
-
-
-    ;; A steady light, not blinking parens
-    
-        ;;; AUCTeX
-        ;; Customary Customization, p. 1 and 16 in the manual
-        ;; and http://www.emacswiki.org/emacs/AUCTeX#toc2
-
-    ;;    (setq TeX-parse-self t); Enable parse on load.
-    ;;    (setq TeX-auto-save t); Enable parse on save.
-    ;;    (setq-default TeX-master nil)
-
-    ;;    (setq TeX-PDF-mode t); PDF mode (rather than DVI-mode)
-
-    ;;    (add-hook 'TeX-mode-hook 'flyspell-mode); Enable Flyspell mode for TeX modes such as AUCTeX. Highlights all misspelled words.
-     ;;   (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode); Enable Flyspell program mode for emacs lisp mode, which highlights all misspelled words in comments and strings.
-    ;;    (add-hook 'TeX-mode-hook
-    ;;              (lambda () (TeX-fold-mode 1))); Automatically activate TeX-fold-mode.
-
-        ;;; RefTeX
-        ;; Turn on RefTeX for AUCTeX http://www.gnu.org/s/auctex/manual/reftex/reftex_5.html
-     ;;   (add-hook 'TeX-mode-hook 'turn-on-reftex)
-
 
   #+END_SRC
