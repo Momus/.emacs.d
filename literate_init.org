@@ -423,6 +423,13 @@ buffer is not visiting a file."
       #+BEGIN_SRC 
       (fset 'yes-or-no-p 'y-or-n-p)
       #+END_SRC
+***** Prettify Symbols! It's time
+******* We want it everywhere!
+        Alists are stored with in their language's section.
+        #+BEGIN_SRC emacs-lisp
+          (global-prettify-symbols-mode +1)
+          (setq prettify-symbols-unprettify-at-point t)
+        #+END_SRC
 
 * Language Specfic
 *** Ruby and Rails
@@ -501,7 +508,6 @@ buffer is not visiting a file."
         (company-emacs-eclim-setup)
       #+END_SRC
 
-
 *** XML
     Configured using [[https://fedoraproject.org/wiki/How_to_use_Emacs_for_XML_editing][this tutorial]]
     Make sure all XMLis stuff is edited with nxml-mode
@@ -548,6 +554,27 @@ buffer is not visiting a file."
          )
       (use-package cider
          :ensure t)
+      #+END_SRC
+***** Prettify Symbols!
+      #+BEGIN_SRC emacs-lisp
+        (defvar clojure-prettify-alist '())
+        ;;http://endlessparentheses.com/using-prettify-symbols-in-clojure-and-elisp-without-breaking-indentation.html
+        (add-to-list 'clojure-prettify-alist
+                     '("<=" . (?· (Br . Bl) ?≤)))
+        (add-to-list 'clojure-prettify-alist
+                     '(">=" . (?· (Br . Bl) ?≥)))
+
+        ; ⇨, 🡒, or →
+        (add-to-list 'clojure-prettify-alist
+                     '("->" . (?\s (Br . Bl) ?\s (Bc . Bc) ?🠊)))
+        (add-to-list 'clojure-prettify-alist
+                     '("->>" . (?\s (Br . Bl) ?\s (Br . Bl) ?\s
+                                    (Bc . Br) ?🠊 (Bc . Bl) ?🠊)))
+
+        (eval-after-load 'clojure-mode
+          '(setq clojure-prettify-symbols-alist
+                 (append clojure-prettify-alist
+                         clojure--prettify-symbols-alist)))
       #+END_SRC
 ***** Stuff from  [[http://www.braveclojure.com/basic-emacs/][Brave Clojure]] that needs refactoring.
       #+BEGIN_SRC emacs-lisp
