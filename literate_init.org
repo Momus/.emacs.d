@@ -473,16 +473,26 @@ buffer is not visiting a file."
       #+END_SRC
 ***** 
 *** R (ESS)
-    #+BEGIN_SRC emacs-lisp
-      (use-package ess
-        :ensure t
-        :init (require 'ess-site))
-    #+END_SRC
+***** Basic Config
+      #+BEGIN_SRC emacs-lisp
+        (use-package ess
+          :ensure t
+          :init (require 'ess-site))
+      #+END_SRC
     
-    TODO: This should fix this [[https://github.com/jimhester/lintr/issues/79][bug]], but it dosen't
-    #+BEGIN_SRC emacs-lisp
-    (setq  flycheck-lintr-caching nil)
-    #+END_SRC
+      TODO: This should fix this [[https://github.com/jimhester/lintr/issues/79][bug]], but it dosen't
+      #+BEGIN_SRC emacs-lisp
+      (setq  flycheck-lintr-caching nil)
+      #+END_SRC
+***** Prettify Symbols! 
+      #+BEGIN_SRC emacs-lisp
+        (defvar R-prettify-alist '())
+        (add-to-list 'R-prettify-alist 
+                     '("%>%" , ?⟾))
+        ;;Someday ESS will have its own symbols alist, but that day is not
+        ;;today.
+        (append R-prettify-alist prettify-symbols-alist)
+      #+END_SRC
 
 *** Java - emacs-eclim
     #+BEGIN_SRC emacs-lisp
