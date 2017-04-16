@@ -297,9 +297,9 @@ buffer is not visiting a file."
 *** Code Blocks
     - Get rid of confirmation and syntax highlight code in text blocks:
       #+BEGIN_SRC emacs-lisp
-        (setq org-confim-babel-evaluate nil
-             org-src-fontify-natively t
-            org-src-tab-acts-natively t)
+        (setq org-confirm-babel-evaluate nil
+              org-src-fontify-natively t
+              org-src-tab-acts-natively t)
       #+END_SRC
     
     - Load the languages we need; emacs-lisp we get for free.
