@@ -196,7 +196,7 @@
 ***** Rainbow Delimiters!
       yay rainbows!
       #+BEGIN_SRC emacs-lisp
-      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+              (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
       #+END_SRC
 ***** [[ http://emacsredux.com/blog/2013/04/21/edit-files-as-root/][Sudo Edit]]
          #+BEGIN_SRC emacs-lisp
@@ -478,11 +478,12 @@ buffer is not visiting a file."
         (use-package ess
           :ensure t
           :init (require 'ess-site))
+        (add-hook 'ess-mode-hook #'rainbow-delimiters-mode)
       #+END_SRC
     
       TODO: This should fix this [[https://github.com/jimhester/lintr/issues/79][bug]], but it dosen't
       #+BEGIN_SRC emacs-lisp
-      (setq  flycheck-lintr-caching nil)
+        (setq  flycheck-lintr-caching nil)
       #+END_SRC
 ***** Prettify Symbols! 
       #+BEGIN_SRC emacs-lisp
