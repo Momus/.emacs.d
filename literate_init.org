@@ -376,7 +376,6 @@ buffer is not visiting a file."
      (require 'magit)
     #+END_SRC
     
-
 *** MagitHub
     Remember to isntall the [[https://hub.github.com/hub][hub]] package with your favorite package manager.
     #+BEGIN_SRC emacs-lisp
@@ -626,6 +625,15 @@ buffer is not visiting a file."
                   (setq coffee-cleanup-whitespace nil)))
       (custom-set-variables
        '(coffee-tab-width 2))
+    #+END_SRC
+*** Ledger
+    #+BEGIN_SRC emacs-lisp
+      (use-package ledger-mode
+        :ensure t
+        :config  (add-to-list
+                  'auto-mode-alist
+                  '("\\.ledger$" . ledger-mode)))
+
     #+END_SRC
 * And the rest
   I will gradually rewrite this a to be literate, and such, but for
