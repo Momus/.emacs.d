@@ -405,6 +405,27 @@ buffer is not visiting a file."
     #+END_SRC
 
 *** TODO Get rid of seperate Eshell file
+    #+BEGIN_SRC emacs-lisp
+      ;;This is so ehshell finds our alias files.
+      (setq eshell-directory-name "~/.emacs.d/eshell") 
+
+      ;;This will fix crashing problems
+      ;; nyan-prompt plays badly with explicitly stating prompt. Try without.
+      ;;(setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
+
+      ;;Load eshell-tramp module:
+      (require 'em-tramp) ; 
+      ;;  pcomplete-list better than the completion cycling. 
+      (setq eshell-cmpl-cycle-completions nil)
+
+      ;;Enable password cashing
+      ;; Should also work for tramp
+      (setq password-cache t)
+
+      ;;Set password cash experation (in seconds)
+      (setq password-cache-expiry 3600)
+
+    #+END_SRC
 *** Nyan prompt
     Because why not?
     #+BEGIN_SRC emacs-lisp
@@ -717,17 +738,10 @@ buffer is not visiting a file."
   plan to get rid of config files in the elisp directory and put most of that here.
   #+BEGIN_SRC emacs-lisp
 
-    ;;Eshell!
-    (load "my_eshell")
-
-    
-
-    ;; We like desktop save mode, however, it is a bad idea to keep saved
     ;; desktops in a git repository.  So while it is enabled, make sure that
     ;; the desktop directory is in git ignore
         (desktop-save-mode 1)
         (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
-
 
     ;;Edit browser text-areas with Emacs!
     ;(require 'edit-server)
