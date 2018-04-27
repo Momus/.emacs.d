@@ -302,7 +302,7 @@ buffer is not visiting a file."
            (python . t)
            ;;shell should be on by defult.
            ;; but it's not
-           (shell . t)
+           ;(shell . t)
            )
          )
       #+END_SRC
@@ -397,9 +397,9 @@ buffer is not visiting a file."
 
 *** TODO Get rid of seperate Eshell file
 *** Nyan prompt
-    Because why not?
+    Because why not? Becase it no longer works :(
     #+BEGIN_SRC emacs-lisp
-    (add-hook 'eshell-load-hook 'nyan-prompt-enable)
+    ;(add-hook 'eshell-load-hook 'nyan-prompt-enable)
     #+END_SRC
 * Language Independent
 ***** [[https://github.com/bbatsov/projectile][Projectile]]
@@ -518,8 +518,8 @@ buffer is not visiting a file."
           )
         (use-package cider
           :ensure t)
-        (use-package clj-refactor
-           :ensure t)
+        ;(use-package clj-refactor
+        ;   :ensure t)
       #+END_SRC
 ***** Stuff from  [[http://www.braveclojure.com/basic-emacs/][Brave Clojure]] that needs refactoring.
       #+BEGIN_SRC emacs-lisp
@@ -530,8 +530,6 @@ buffer is not visiting a file."
       	;; Java classes (e.g. JavaClassName)
       	(add-hook 'clojure-mode-hook 'subword-mode)
 
-      	;; A little more syntax highlighting
-      	;(require 'clojure-mode-extra-font-locking)
 
       	;; syntax hilighting for midje
       	(add-hook 'clojure-mode-hook
