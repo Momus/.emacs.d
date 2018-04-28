@@ -26,20 +26,33 @@
 *** Package Management
     Adding [[http://melpa.org/#/getting-started][Melpa]] for magit and others.
     #+BEGIN_SRC emacs-lisp
-    	(require 'package)
-    	(add-to-list 'package-archives
-                         '("melpa" . "https://melpa.org/packages/"))
-    	(add-to-list 'package-archives
-                         '("marmalade" . "http://marmalade-repo.org/packages/") t)
-    	(add-to-list 'package-archives 
-    		     '("org" . "http://orgmode.org/elpa/") t)
-    	(package-initialize)
+      (require 'package)
+      (setq package-enable-at-startup nil)
+      (add-to-list 'package-archives
+                       '("melpa" . "https://melpa.org/packages/"))
+      (add-to-list 'package-archives
+                       '("marmalade" . "http://marmalade-repo.org/packages/") t)
+      (add-to-list 'package-archives 
+                   '("org" . "http://orgmode.org/elpa/") t)
+      (package-initialize)
     #+END_SRC
     
-*** Advanced Configutration
-    In theory use-package will make configuting things even more elegant.
+    If use-package isn't available, install it automagically
     #+BEGIN_SRC emacs-lisp
-      (require 'use-package)
+      (unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
+
+      (eval-when-compile
+        (require 'use-package))
+
+      ;; enables the use of the :diminish keyword to hide a minor mode from
+      ;; the modline after load.
+      (use-package diminish
+        :ensure t)
+      ;; Part of use-package. Perhaps the future of managing keybindings
+      ;; after I figure it out.
+      (require 'bind-key)
     #+END_SRC
     There are better defaults, let's use them.
     #+BEGIN_SRC emacs-lisp
