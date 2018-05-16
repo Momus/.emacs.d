@@ -142,7 +142,7 @@
         (setq ivy-count-format "(%d/%d) ")
 
         ;;Integrate projectile into Ivy
-        (counsel-projectile-on)
+        ;;(counsel-projectile-on)
         ;; Make M-x magic again!
         (global-set-key (kbd "M-x") 'counsel-M-x)
       #+END_SRC
