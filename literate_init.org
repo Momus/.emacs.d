@@ -404,11 +404,12 @@ buffer is not visiting a file."
 *** MagitHub
     Remember to isntall the [[https://hub.github.com/hub][hub]] package with your favorite package manager.
     #+BEGIN_SRC emacs-lisp
-     (use-package magithub
-                  :ensure t
-                  :after magit
-                  :config 
-                   (magithub-feature-autoinject t))
+      (use-package magithub
+                   :ensure t
+                   :after magit
+                   :config 
+                    (magithub-feature-autoinject t)
+                    (setq magithub-clone-default-directory "~/repos"))
     #+END_SRC
 
 *** Keybindings                                                     :keybind:
