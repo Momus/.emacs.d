@@ -29,6 +29,7 @@
     	(require 'package)
     	(add-to-list 'package-archives
                          '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
     	(add-to-list 'package-archives
                          '("marmalade" . "http://marmalade-repo.org/packages/") t)
     	(add-to-list 'package-archives 
@@ -43,9 +44,14 @@
     #+END_SRC
     There are better defaults, let's use them.
     #+BEGIN_SRC emacs-lisp
-;(use-package better-defautls
-;  :ensure t)
-(require 'better-defaults)
+      (use-package better-defaults
+        :ensure t)
+      (require 'better-defaults)
+    #+END_SRC
+    Rainbow Delimiters!
+    #+BEGIN_SRC emacs-lisp
+    (use-package rainbow-delimiters
+       :ensure t)
     #+END_SRC
 
 *** Make the kill ring work with the OS clippboard
@@ -79,20 +85,24 @@
       - intalled package smart-mode-line-powerline-theme
       - configuration
 	#+BEGIN_SRC emacs-lisp
+
+          (use-package smart-mode-line-powerline-theme
+            :ensure t)
+
+
           (use-package smart-mode-line
-                       ;:quelpa (smart-mode-line :repo "Bruce-Connor/smart-mode-line" :fetcher github)
-:ensure t
-
-                       :init
-                       (setq sml/vc-mode-show-backend t)
-                       (setq sml/no-confirm-load-theme t)
-                       (setq sml/shorten-directory t)
-                       ;(setq sml/shorten-modes t) ;interferes with Nyan Mode
-                       (setq sml/name-width '40)
-                       (setq sml/mode-width 'full)
-
-                       :config
-        	       (sml/apply-theme 'powerline))
+            :ensure t
+            
+            :init
+            (setq sml/vc-mode-show-backend t)
+            (setq sml/no-confirm-load-theme t)
+            (setq sml/shorten-directory t)
+            (setq sml/shorten-modes t) ; may interferes with Nyan Mode
+            (setq sml/name-width '40)
+            (setq sml/mode-width 'full)
+            
+            :config
+            (sml/apply-theme 'powerline))
           (sml/setup)
 	#+END_SRC
 ***** Rich minority mode
@@ -129,13 +139,13 @@
       #+BEGIN_SRC emacs-lisp
       (when (fboundp 'winner-mode) ;Compat test
         (winner-mode 1))
-
       ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
       ;; have winner-mode.
       #+END_SRC
 ***** Now trying Ivy: Ido Mode WAS TeH Bomb
       #+BEGIN_SRC emacs-lisp
-        (require 'ivy)
+        (use-package ivy
+           :ensure t)
         (ivy-mode t)
         (setq magit-completing-read-function 'ivy-completing-read)
         (setq ivy-use-virtual-buffers t)
@@ -149,21 +159,21 @@
 ***** [[https://github.com/magnars/expand-region.el][Expand Region]]
       All sorts of goodies can be found in the docs for er/* functions.
       #+BEGIN_SRC emacs-lisp
-        (require 'expand-region)
+        (use-package expand-region
+           :ensure t)
         (global-set-key (kbd "C-=") 'er/expand-region)
       #+END_SRC
-******* Buffer-move 
-          [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This has it's own github
-          module, which will have to be pulled for updates.
-          #+BEGIN_SRC emacs-lisp
-            (load "buffer-move.el")
-          #+END_SRC
+***** Buffer-move 
+        [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This is taken from [[https://www.emacswiki.org/emacs/buffer-move.el][emacs-wiki]].
+        #+BEGIN_SRC emacs-lisp
+          (load "buffer-move.el")
+        #+END_SRC
 
-          We want current window to switch to previous buffer
-          instead of swapping buffers of both windows:
-          #+BEGIN_SRC emacs-lisp
-            (setq buffer-move-behavior 'move)
-          #+END_SRC
+        We want current window to switch to previous buffer
+        instead of swapping buffers of both windows:
+        #+BEGIN_SRC emacs-lisp
+          (setq buffer-move-behavior 'move)
+        #+END_SRC
 ********* Unseful key bindings:                                       :keybind:
         #+BEGIN_SRC emacs-lisp
           (global-set-key (kbd "<C-S-up>")     'buf-move-up)
@@ -178,7 +188,8 @@
 ***** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
       #+BEGIN_SRC emacs-lisp
       ;Window Number Mode is now a package, does not need to be loaded.
-      ;(load "window-number")
+      (use-package window-number
+         :ensure t)
       (require 'window-number)
       (window-number-mode)
       #+END_SRC
@@ -261,7 +272,8 @@ buffer is not visiting a file."
 
 ***** TODO Enable Company Quickhelp (from Melpa) 
       #+BEGIN_SRC emacs-lisp
-        (company-quickhelp-mode 1)
+        (use-package company-quickhelp
+           :ensure t)
       #+END_SRC
 * [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]                                                         :keybind:
   These are highly personalizable, and should probaby be saved on a per-machine basis.
@@ -310,7 +322,7 @@ buffer is not visiting a file."
          '((R            . t)
            (css          . t)
            (ruby         . t)
-           (shell        . t)
+           (sh           . t)
            (python       . t)
            (emacs-lisp   . t)))
       #+END_SRC
@@ -325,6 +337,8 @@ buffer is not visiting a file."
 *** Exporting
     - The htmlize package makes source code pretty on export
       #+BEGIN_SRC emacs-lisp
+        (use-package htmlize
+          :ensure t)
         (require 'htmlize)
       #+END_SRC
 *** Capture
@@ -381,6 +395,8 @@ buffer is not visiting a file."
 *** Basic Config
     If there is more to be done, remember to use-package
     #+BEGIN_SRC emacs-lisp
+      (use-package magit
+        :ensure t)
      (require 'magit)
     #+END_SRC
     
@@ -389,6 +405,7 @@ buffer is not visiting a file."
     Remember to isntall the [[https://hub.github.com/hub][hub]] package with your favorite package manager.
     #+BEGIN_SRC emacs-lisp
      (use-package magithub
+                  :ensure t
                   :after magit
                   :config 
                    (magithub-feature-autoinject t))
@@ -427,18 +444,22 @@ buffer is not visiting a file."
 
     #+END_SRC
 *** Nyan prompt
-    Because why not?
+    Because why not? Because it break things. Save for later.
     #+BEGIN_SRC emacs-lisp
-    (add-hook 'eshell-load-hook 'nyan-prompt-enable)
+    ;(add-hook 'eshell-load-hook 'nyan-prompt-enable)
     #+END_SRC
 * Language Independent
 ***** [[https://github.com/bbatsov/projectile][Projectile]]
       #+BEGIN_SRC emacs-lisp
-      (projectile-global-mode)
+        (use-package projectile
+          :ensure t)
+        (projectile-global-mode)
       #+END_SRC
 ***** [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Flycheck]] is the now, as flymake seems caput.
       #+BEGIN_SRC emacs-lisp
-      (global-flycheck-mode)
+        (use-package flycheck
+          :ensure t)
+        (global-flycheck-mode)
       #+END_SRC
 ***** Yes-No- who needs them?
       #+BEGIN_SRC 
@@ -489,6 +510,8 @@ buffer is not visiting a file."
       #+END_SRC
 ***** [[https://github.com/bbatsov/rubocop-emacs][Rubocop]]
       #+BEGIN_SRC emacs-lisp
+        (use-package rubocop
+           :ensure t)
         (require 'rubocop)
         (add-hook 'ruby-mode-hook #'rubocop-mode)
       #+END_SRC
@@ -517,27 +540,28 @@ buffer is not visiting a file."
       #+END_SRC
 
 *** Java - emacs-eclim
+    Let's jump off the java bridge when we get to it again.
     #+BEGIN_SRC emacs-lisp
-      (require 'eclim)
-      (add-hook 'java-mode-hook 'eclim-mode)
+      ;(require 'eclim)
+      ;(add-hook 'java-mode-hook 'eclim-mode)
 
-      (setq eclimd-default-workspace '"~/usr/src/java/workspace")
+      ;(setq eclimd-default-workspace '"~/usr/src/java/workspace")
 
-      (require 'eclimd)
+      ;(require 'eclimd)
     #+END_SRC
 ***** use company-mode with Eclim
       #+BEGIN_SRC emacs-lisp
         ;; Adjust Eclim for non-standard Eclipse directories.
-        (add-to-list 'eclim-eclipse-dirs '"~/usr/opt/eclipse")
-        (setq eclim-executable '"~/usr/opt/eclipse/eclim")
+        ;(add-to-list 'eclim-eclipse-dirs '"~/usr/opt/eclipse")
+        ;(setq eclim-executable '"~/usr/opt/eclipse/eclim")
         ;; Display compitation error messages in the echo area:
-        (setq help-at-pt-display-when-idle t)
-        (setq help-at-pt-timer-delay 0.1)
-        (help-at-pt-set-timer)
+        ;(setq help-at-pt-display-when-idle t)
+        ;(setq help-at-pt-timer-delay 0.1)
+        ;(help-at-pt-set-timer)
 
         ;;Auto complete is through Company Mode
-        (require 'company-emacs-eclim)
-        (company-emacs-eclim-setup)
+        ;(require 'company-emacs-eclim)
+        ;(company-emacs-eclim-setup)
       #+END_SRC
 
 *** XML
@@ -564,6 +588,8 @@ buffer is not visiting a file."
 ***** Automatically load paredit when editing a Lisp file
       #+BEGIN_SRC emacs-lisp
         ;; More at http://www.emacswiki.org/emacs/ParEdit
+        (use-package paredit
+           :ensure t)
         (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
         (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
         (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -610,62 +636,64 @@ buffer is not visiting a file."
       #+END_SRC
 ***** Stuff from  [[http://www.braveclojure.com/basic-emacs/][Brave Clojure]] that needs refactoring.
       #+BEGIN_SRC emacs-lisp
-      	;; Enable paredit for Clojure
-      	(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+        ;; Enable paredit for Clojure
+        (add-hook 'clojure-mode-hook 'enable-paredit-mode)
 
-      	;; This is useful for working with camel-case tokens, like names of
-      	;; Java classes (e.g. JavaClassName)
-      	(add-hook 'clojure-mode-hook 'subword-mode)
+        ;; This is useful for working with camel-case tokens, like names of
+        ;; Java classes (e.g. JavaClassName)
+        (add-hook 'clojure-mode-hook 'subword-mode)
 
-      	;; A little more syntax highlighting
-      	(require 'clojure-mode-extra-font-locking)
+        ;; A little more syntax highlighting
+        ;;not working right now. Re-examine when dev with Clojure again.
+        ;(require 'clojure-mode-extra-font-locking)
 
-      	;; syntax hilighting for midje
-      	(add-hook 'clojure-mode-hook
+
+        ;; syntax hilighting for midje
+        (add-hook 'clojure-mode-hook
                   (lambda ()
                     (setq inferior-lisp-program "lein repl")
                     (font-lock-add-keywords
                      nil
                      '(("(\\(facts?\\)"
-                      	(1 font-lock-keyword-face))
-    		   ("(\\(background?\\)"
-                      	(1 font-lock-keyword-face))))
+                        (1 font-lock-keyword-face))
+                   ("(\\(background?\\)"
+                        (1 font-lock-keyword-face))))
                     (define-clojure-indent (fact 1))
                     (define-clojure-indent (facts 1))))
 
-      	;;;;
-      	;; Cider
-      	;;;;
+        ;;;;
+        ;; Cider
+        ;;;;
 
-      	;; provides minibuffer documentation for the code you're typing into the repl
-      	(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+        ;; provides minibuffer documentation for the code you're typing into the repl
+        (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
-      	;; go right to the REPL buffer when it's finished connecting
-      	(setq cider-repl-pop-to-buffer-on-connect t)
+        ;; go right to the REPL buffer when it's finished connecting
+        (setq cider-repl-pop-to-buffer-on-connect t)
 
-      	;; When there's a cider error, show its buffer and switch to it
-      	(setq cider-show-error-buffer t)
-      	(setq cider-auto-select-error-buffer t)
+        ;; When there's a cider error, show its buffer and switch to it
+        (setq cider-show-error-buffer t)
+        (setq cider-auto-select-error-buffer t)
 
-      	;; Where to store the cider history.
-      	(setq cider-repl-history-file "~/.emacs.d/cider-history")
+        ;; Where to store the cider history.
+        (setq cider-repl-history-file "~/.emacs.d/cider-history")
 
-      	;; Wrap when navigating history.
-      	(setq cider-repl-wrap-history t)
+        ;; Wrap when navigating history.
+        (setq cider-repl-wrap-history t)
 
-      	;; enable paredit in your REPL
-      	(add-hook 'cider-repl-mode-hook 'paredit-mode)
+        ;; enable paredit in your REPL
+        (add-hook 'cider-repl-mode-hook 'paredit-mode)
 
-      	;; Use clojure mode for other extensions
-      	(add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
-      	(add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
-      	(add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
-      	(add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
+        ;; Use clojure mode for other extensions
+        (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+        (add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
+        (add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
+        (add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
 
 
-      	;; key bindings
-      	;; these help me out with the way I usually develop web apps
-      	(defun cider-start-http-server ()
+        ;; key bindings
+        ;; these help me out with the way I usually develop web apps
+        (defun cider-start-http-server ()
           (interactive)
           (cider-load-current-buffer)
           (let ((ns (cider-current-ns)))
@@ -674,15 +702,15 @@ buffer is not visiting a file."
             (cider-interactive-eval (format "(def server (%s/start)) (println server)" ns))))
 
 
-      	(defun cider-refresh ()
+        (defun cider-refresh ()
           (interactive)
           (cider-interactive-eval (format "(user/reset)")))
 
-      	(defun cider-user-ns ()
+        (defun cider-user-ns ()
           (interactive)
           (cider-repl-set-ns "kwaku"))
 
-      	(eval-after-load 'cider
+        (eval-after-load 'cider
           '(progn
              (define-key clojure-mode-map (kbd "C-c C-v") 'cider-start-http-server)
              (define-key clojure-mode-map (kbd "C-M-r") 'cider-refresh)
