@@ -333,6 +333,11 @@ buffer is not visiting a file."
         (require 'ob-R)
         (require 'ob-python)
       #+END_SRC
+      Highlight \LaTeX math mode in org mode.
+      #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'org
+         '(setf org-highlight-latex-and-related '(latex)))
+      #+END_SRC
 
 *** Exporting
     - The htmlize package makes source code pretty on export
