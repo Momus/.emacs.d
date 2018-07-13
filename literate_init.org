@@ -152,7 +152,9 @@
         (setq ivy-count-format "(%d/%d) ")
 
         ;;Integrate projectile into Ivy
-        ;;(counsel-projectile-on)
+        (use-package projectile
+          :ensure t)
+        (projectile-global-mode)
         ;; Make M-x magic again!
         (global-set-key (kbd "M-x") 'counsel-M-x)
       #+END_SRC
@@ -322,7 +324,7 @@ buffer is not visiting a file."
          '((R            . t)
            (css          . t)
            (ruby         . t)
-           (sh           . t)
+           ;(sh           . t)
            (python       . t)
            (emacs-lisp   . t)))
       #+END_SRC
