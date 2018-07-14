@@ -473,6 +473,26 @@ buffer is not visiting a file."
       #+BEGIN_SRC 
       (fset 'yes-or-no-p 'y-or-n-p)
       #+END_SRC
+***** Paredit for Scheme, CL, Clojure, and friends
+      #+BEGIN_SRC emacs-lisp
+        ;; More at http://www.emacswiki.org/emacs/ParEdit
+        (use-package paredit
+           :ensure t)
+        (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+        (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+        (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+        (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+        (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+        (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+        (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+        (add-hook 'clojure-mode-hook          #'paredit-mode)
+        ;; eldoc-mode shows documentation in the minibuffer when writing code
+        ;; http://www.emacswiki.org/emacs/ElDoc
+        (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+        (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+        (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+      #+END_SRC
+
 ***** Prettify Symbols! It's time
 ******* We want it everywhere!
         Alists are stored with in their language's section.
@@ -592,25 +612,6 @@ buffer is not visiting a file."
       #+BEGIN_SRC emacs-lisp
         (setq inferior-lisp-program "/home/kwaku/usr/bin/sbcl")
         (setq slime-contribs '(slime-fancy))
-      #+END_SRC
-***** Automatically load paredit when editing a Lisp file
-      #+BEGIN_SRC emacs-lisp
-        ;; More at http://www.emacswiki.org/emacs/ParEdit
-        (use-package paredit
-           :ensure t)
-        (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-        (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-        (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-        (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-        (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-        (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-        (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-
-        ;; eldoc-mode shows documentation in the minibuffer when writing code
-        ;; http://www.emacswiki.org/emacs/ElDoc
-        (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-        (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-        (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
       #+END_SRC
 *** Clojure
 ***** Set up and configure the necessary packages.
