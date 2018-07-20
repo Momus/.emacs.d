@@ -543,7 +543,6 @@ buffer is not visiting a file."
         (require 'rubocop)
         (add-hook 'ruby-mode-hook #'rubocop-mode)
       #+END_SRC
-***** 
 *** R (ESS)
 ***** Basic Config
       #+BEGIN_SRC emacs-lisp
@@ -749,6 +748,10 @@ buffer is not visiting a file."
                   (setq coffee-cleanup-whitespace nil)))
       (custom-set-variables
        '(coffee-tab-width 2))
+    #+END_SRC
+*** CSS
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
     #+END_SRC
 * My Own Private Functions
 *** point-int
