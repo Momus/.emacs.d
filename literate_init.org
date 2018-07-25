@@ -94,7 +94,7 @@
 	#+BEGIN_SRC emacs-lisp
           (use-package smart-mode-line
                        ;:quelpa (smart-mode-line :repo "Bruce-Connor/smart-mode-line" :fetcher github)
-:ensure t
+                       :ensure t
 
                        :init
                        (setq sml/vc-mode-show-backend t)
@@ -148,14 +148,15 @@
       #+END_SRC
 ***** Now trying Ivy: Ido Mode WAS TeH Bomb
       #+BEGIN_SRC emacs-lisp
-        (require 'ivy)
+        (use-package ivy
+           :ensure t)
         (ivy-mode t)
         (setq magit-completing-read-function 'ivy-completing-read)
         (setq ivy-use-virtual-buffers t)
         (setq ivy-count-format "(%d/%d) ")
 
         ;;Integrate projectile into Ivy
-        (counsel-projectile-on)
+        ;(counsel-projectile-on)
         ;; Make M-x magic again!
         (global-set-key (kbd "M-x") 'counsel-M-x)
       #+END_SRC
