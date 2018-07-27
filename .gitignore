@@ -28,3 +28,5 @@ recentf*
 elpa/archives/gnu/*
 places
 backups*
+magithub/cache
+cider-history
