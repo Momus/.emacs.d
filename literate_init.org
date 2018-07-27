@@ -4,11 +4,6 @@
 #+DATE:        2016-03-15 Tue
 #+DESCRIPTION: Managing my .emacs the literate programming way with org-mode.
 
-* TODO [0/3] Fix the package dependcency problem. 
-  Have to reinstall packages in this order:
-  - [ ] use-package :: that's what I need to fix this in the first place
-  - [ ] buffer-move :: move the buffers
-  - [ ] magit :: really should just be part of Emacs
 * General Settings
   Definitions found here apply to all emacs sessions.
 *** Personal Information
