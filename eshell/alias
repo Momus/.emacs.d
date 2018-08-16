@@ -6,3 +6,5 @@ alias emacs find-file $1
 alias d dired .
 alias gst git status
 alias gbr git branch
+alias v vagrant $1
+alias vc vagrant ssh -c  $1

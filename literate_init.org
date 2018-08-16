@@ -543,6 +543,12 @@ buffer is not visiting a file."
         (require 'rubocop)
         (add-hook 'ruby-mode-hook #'rubocop-mode)
       #+END_SRC
+***** inf-ruby
+      #+BEGIN_SRC emacs-lisp
+        (use-package inf-ruby
+          :ensure t)
+        ( add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+      #+END_SRC
 *** R (ESS)
 ***** Basic Config
       #+BEGIN_SRC emacs-lisp
