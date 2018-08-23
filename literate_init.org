@@ -348,6 +348,13 @@ buffer is not visiting a file."
           :ensure t)
         (require 'htmlize)
       #+END_SRC
+    - For Github Flavored Mardown, ox-gfm
+      #+BEGIN_SRC emacs-lisp
+        (use-package ox-gfm
+          :ensure t)
+        (eval-after-load "org"
+        '(reqiure 'ox-gfm nil t))
+      #+END_SRC
 *** Capture
     - Replaces remember mode. Get stuff from your brain into org-mode
       quick!
@@ -758,6 +765,11 @@ buffer is not visiting a file."
 *** CSS
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+    #+END_SRC
+*** Prolog.  Yes prolog.
+    #+BEGIN_SRC emacs-lisp
+      ;; No, .pl is no longer Perl nor Poland.  It is Prolog
+      (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
     #+END_SRC
 * My Own Private Functions
 *** point-int
