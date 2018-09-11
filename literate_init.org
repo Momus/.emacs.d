@@ -348,7 +348,7 @@ buffer is not visiting a file."
         (use-package ox-gfm
           :ensure t)
         (eval-after-load "org"
-        '(reqiure 'ox-gfm nil t))
+        '(require 'ox-gfm nil t))
       #+END_SRC
 *** Capture
     - Replaces remember mode. Get stuff from your brain into org-mode
@@ -550,6 +550,13 @@ buffer is not visiting a file."
         (use-package inf-ruby
           :ensure t)
         ( add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+      #+END_SRC
+***** cucumber? why not.
+      #+BEGIN_SRC emacs-lisp
+        (use-package feature-mode
+          :ensure t)
+        (setq feature-default-language "en")
+        (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
       #+END_SRC
 *** R (ESS)
 ***** Basic Config
