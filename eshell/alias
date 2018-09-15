@@ -5,3 +5,4 @@ alias emacs find-file $1
 alias ff find-file $1
 alias la ls -hla $*
 alias ll ls -hl $*
+alias be bundle exec $*
