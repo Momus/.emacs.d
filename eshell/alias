@@ -8,3 +8,4 @@ alias gst git status
 alias gbr git branch
 alias v vagrant $1
 alias vc vagrant ssh -c  $1
+alias be bundle exec $*
