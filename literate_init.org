@@ -741,29 +741,62 @@ buffer is not visiting a file."
              (define-key cider-mode-map (kbd "C-c u") 'cider-user-ns)))
       #+END_SRC
 *** JavaScript and CoffeeSript
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
-      (add-hook 'js-mode-hook 'subword-mode)
-      (add-hook 'html-mode-hook 'subword-mode)
-      (setq js-indent-level 2)
-      (eval-after-load "sgml-mode"
-        '(progn
-           (require 'tagedit)
-           (tagedit-add-paredit-like-keybindings)
-           (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))))
+***** [[https://indium.readthedocs.io/en/latest/index.html][Indium]] for JavaScript
+******* Dependencies
+        [[https://developer.fedoraproject.org/tech/languages/nodejs/nodejs.html][Now]] on Fedora, nmp comes with nodejs
+        #+BEGIN_SRC sh :tangle no :dir /sudo:: :results value verbatim
+        sudo yum -y install nodejs 
+        #+END_SRC
 
+        #+RESULTS:
+        : Last metadata expiration check: 2:54:21 ago on Tue 25 Sep 2018 07:30:35 PM MDT.
+        : Dependencies resolved.
+        : Nothing to do.
+        : Complete!
 
-      ;; coffeescript
-      (add-to-list 'auto-mode-alist '("\\.coffee.erb$" . coffee-mode))
-      (add-hook 'coffee-mode-hook 'subword-mode)
-      (add-hook 'coffee-mode-hook 'highlight-indentation-current-column-mode)
-      (add-hook 'coffee-mode-hook
-                (defun coffee-mode-newline-and-indent ()
-                  (define-key coffee-mode-map "\C-j" 'coffee-newline-and-indent)
-                  (setq coffee-cleanup-whitespace nil)))
-      (custom-set-variables
-       '(coffee-tab-width 2))
-    #+END_SRC
+        Which is needed to install the indium server:
+        #+BEGIN_SRC sh :tangle no :dir /sudo:: :results value verbatim
+        npm install -g indium
+        #+END_SRC
+
+        #+RESULTS:
+        : /usr/bin/indium -> /usr/lib/node_modules/indium/bin/indium
+        : + indium@3.2.0
+        : added 10 packages in 2.151s
+
+******* Melpa Package
+        #+BEGIN_SRC emacs-lisp
+          (use-package indium
+            :ensure t
+            )
+        #+END_SRC
+        IMPORTANT: Read the  [[https://indium.readthedocs.io/en/latest/setup.html][docs]] for project configuration information.
+
+        #+BEGIN_SRC emacs-lisp
+          ;; Trying Irindium. The setup below is for old JavaScript
+          ;; (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+          ;; (add-hook 'js-mode-hook 'subword-mode)
+          ;; (add-hook 'html-mode-hook 'subword-mode)
+          ;; (setq js-indent-level 2)
+          ;; (eval-after-load "sgml-mode"
+          ;;   '(progn
+          ;;      (require 'tagedit)
+          ;;      (tagedit-add-paredit-like-keybindings)
+          ;;      (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))))
+        #+END_SRC
+
+***** coffeescript
+        #+BEGIN_SRC emacs-lisp
+          (add-to-list 'auto-mode-alist '("\\.coffee.erb$" . coffee-mode))
+          (add-hook 'coffee-mode-hook 'subword-mode)
+          (add-hook 'coffee-mode-hook 'highlight-indentation-current-column-mode)
+          (add-hook 'coffee-mode-hook
+                    (defun coffee-mode-newline-and-indent ()
+                      (define-key coffee-mode-map "\C-j" 'coffee-newline-and-indent)
+                      (setq coffee-cleanup-whitespace nil)))
+          (custom-set-variables
+           '(coffee-tab-width 2))
+        #+END_SRC
 *** CSS
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
