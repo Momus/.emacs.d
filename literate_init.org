@@ -769,6 +769,7 @@ buffer is not visiting a file."
           (use-package indium
             :ensure t
             )
+          (add-hook 'js-mode-hook #'indium-interaction-mode)
         #+END_SRC
         IMPORTANT: Read the  [[https://indium.readthedocs.io/en/latest/setup.html][docs]] for project configuration information.
 
