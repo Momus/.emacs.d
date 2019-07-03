@@ -458,6 +458,19 @@ buffer is not visiting a file."
     #+BEGIN_SRC emacs-lisp
     ;(add-hook 'eshell-load-hook 'nyan-prompt-enable)
     #+END_SRC
+*** Simple prompt
+    Bash like prompt showing only sytem name and top directory.
+    #+BEGIN_SRC emacs-lisp
+      (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+            eshell-prompt-function
+            (lambda nil
+              (concat
+               "[" (car (split-string (system-name) "[\.]")) " "
+               (if (string= (eshell/pwd) (getenv "HOME"))
+                   "~" (eshell/basename (eshell/pwd)))
+               "]"
+               (if (= (user-uid) 0) "# " "$ "))))
+    #+END_SRC
 * Language Independent
 ***** [[https://github.com/bbatsov/projectile][Projectile]]
       #+BEGIN_SRC emacs-lisp
