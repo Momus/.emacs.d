@@ -328,7 +328,8 @@ buffer is not visiting a file."
         (require 'ob-ruby)
         (require 'ob-R)
         (require 'ob-python)
-	(require 'ob-shell)
+        (require 'ob-shell)
+        (require 'ob-plantuml)
       #+END_SRC
       Highlight \LaTeX math mode in org mode.
       #+BEGIN_SRC emacs-lisp

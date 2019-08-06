@@ -9,3 +9,4 @@ alias gbr git branch
 alias v vagrant $1
 alias vc vagrant ssh -c  $1
 alias be bundle exec $*
+alias ed ed -p\ℇ𝒟🚀  $*
