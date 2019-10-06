@@ -115,6 +115,10 @@
       (display-time-mode 1)
       #+END_SRC
    
+*** Set Frame Title
+    #+BEGIN_SRC emacs-lisp
+    (setq frame-title-format (concat (daemonp)  " | [%b]-Emacs" emacs-version))
+    #+END_SRC
 *** Useful Functions
 ***** There are better defaults, let's use them.
       #+BEGIN_SRC emacs-lisp
