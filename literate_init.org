@@ -25,8 +25,6 @@
       (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
       (add-to-list 'package-archives
                    '("marmalade" . "http://marmalade-repo.org/packages/") t)
-      (add-to-list 'package-archives 
-                   '("org" . "http://orgmode.org/elpa/") t)
       (package-initialize)
       (require 'use-package)
     #+END_SRC
@@ -577,187 +575,11 @@ buffer is not visiting a file."
         (setq feature-default-language "en")
         (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
       #+END_SRC
-*** R (ESS)
-***** Basic Config
-      #+BEGIN_SRC emacs-lisp
-        (use-package ess
-          :ensure t
-          :init (require 'ess-site))
-        (add-hook 'ess-mode-hook #'rainbow-delimiters-mode)
-      #+END_SRC
-    
-      TODO: This should fix this [[https://github.com/jimhester/lintr/issues/79][bug]], but it dosen't
-      #+BEGIN_SRC emacs-lisp
-        (setq  flycheck-lintr-caching nil)
-      #+END_SRC
-***** Prettify Symbols! 
-      #+BEGIN_SRC emacs-lisp
-        (defvar R-prettify-alist '())
-        (add-to-list 'R-prettify-alist 
-                     '("%>%" , ?⟾))
-        ;;Someday ESS will have its own symbols alist, but that day is not
-        ;;today.
-        (append R-prettify-alist prettify-symbols-alist)
-      #+END_SRC
-
-*** Java - emacs-eclim
-    Let's jump off the java bridge when we get to it again.
-    #+BEGIN_SRC emacs-lisp
-      ;(require 'eclim)
-      ;(add-hook 'java-mode-hook 'eclim-mode)
-
-      ;(setq eclimd-default-workspace '"~/usr/src/java/workspace")
-
-      ;(require 'eclimd)
-    #+END_SRC
-***** use company-mode with Eclim
-      #+BEGIN_SRC emacs-lisp
-        ;; Adjust Eclim for non-standard Eclipse directories.
-        ;(add-to-list 'eclim-eclipse-dirs '"~/usr/opt/eclipse")
-        ;(setq eclim-executable '"~/usr/opt/eclipse/eclim")
-        ;; Display compitation error messages in the echo area:
-        ;(setq help-at-pt-display-when-idle t)
-        ;(setq help-at-pt-timer-delay 0.1)
-        ;(help-at-pt-set-timer)
-
-        ;;Auto complete is through Company Mode
-        ;(require 'company-emacs-eclim)
-        ;(company-emacs-eclim-setup)
-      #+END_SRC
-
-*** XML
-    Configured using [[https://fedoraproject.org/wiki/How_to_use_Emacs_for_XML_editing][this tutorial]]
-    Make sure all XMLis stuff is edited with nxml-mode
-    #+BEGIN_SRC emacs-lisp
-      (setq auto-mode-alist (cons '("\\.xml$" . nxml-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.xsl$" . nxml-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.xhtml$" . nxml-mode) auto-mode-alist))
-      (setq auto-mode-alist (cons '("\\.page$" . nxml-mode) auto-mode-alist))
-      (autoload 'xml-mode "nxml" "XML editing mode" t)
-
-      (eval-after-load 'rng-loc
-        '(add-to-list 'rng-schema-locating-files "~/.schema/schema.xml"))
-      (global-set-key [C-return] 'completion-at-point)
-    #+END_SRC
-
 *** Common Lisp
 ***** Point to the local SBCL installation
       #+BEGIN_SRC emacs-lisp
         (setq inferior-lisp-program "/home/kwaku/usr/bin/sbcl")
         (setq slime-contribs '(slime-fancy))
-      #+END_SRC
-*** Clojure
-***** Set up and configure the necessary packages.
-      #+BEGIN_SRC emacs-lisp
-      (use-package clojure-mode
-         :ensure t
-         )
-      (use-package cider
-         :ensure t)
-      #+END_SRC
-***** Prettify Symbols!
-      #+BEGIN_SRC emacs-lisp
-        (defvar clojure-prettify-alist '())
-        ;;http://endlessparentheses.com/using-prettify-symbols-in-clojure-and-elisp-without-breaking-indentation.html
-        (add-to-list 'clojure-prettify-alist
-                     '("<=" . (?· (Br . Bl) ?≤)))
-        (add-to-list 'clojure-prettify-alist
-                     '(">=" . (?· (Br . Bl) ?≥)))
-
-        ; ⇨, 🡒, or →
-        (add-to-list 'clojure-prettify-alist
-                     '("->" . (?\s (Br . Bl) ?\s (Bc . Bc) ?🠊)))
-        (add-to-list 'clojure-prettify-alist
-                     '("->>" . (?\s (Br . Bl) ?\s (Br . Bl) ?\s
-                                    (Bc . Br) ?🠊 (Bc . Bl) ?🠊)))
-
-        (eval-after-load 'clojure-mode
-          '(setq clojure-prettify-symbols-alist
-                 (append clojure-prettify-alist
-                         clojure--prettify-symbols-alist)))
-      #+END_SRC
-***** Stuff from  [[http://www.braveclojure.com/basic-emacs/][Brave Clojure]] that needs refactoring.
-      #+BEGIN_SRC emacs-lisp
-        ;; Enable paredit for Clojure
-        (add-hook 'clojure-mode-hook 'enable-paredit-mode)
-
-        ;; This is useful for working with camel-case tokens, like names of
-        ;; Java classes (e.g. JavaClassName)
-        (add-hook 'clojure-mode-hook 'subword-mode)
-
-        ;; A little more syntax highlighting
-        ;;not working right now. Re-examine when dev with Clojure again.
-        ;(require 'clojure-mode-extra-font-locking)
-
-
-        ;; syntax hilighting for midje
-        (add-hook 'clojure-mode-hook
-                  (lambda ()
-                    (setq inferior-lisp-program "lein repl")
-                    (font-lock-add-keywords
-                     nil
-                     '(("(\\(facts?\\)"
-                        (1 font-lock-keyword-face))
-                   ("(\\(background?\\)"
-                        (1 font-lock-keyword-face))))
-                    (define-clojure-indent (fact 1))
-                    (define-clojure-indent (facts 1))))
-
-        ;;;;
-        ;; Cider
-        ;;;;
-
-        ;; provides minibuffer documentation for the code you're typing into the repl
-        (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-
-        ;; go right to the REPL buffer when it's finished connecting
-        (setq cider-repl-pop-to-buffer-on-connect t)
-
-        ;; When there's a cider error, show its buffer and switch to it
-        (setq cider-show-error-buffer t)
-        (setq cider-auto-select-error-buffer t)
-
-        ;; Where to store the cider history.
-        (setq cider-repl-history-file "~/.emacs.d/cider-history")
-
-        ;; Wrap when navigating history.
-        (setq cider-repl-wrap-history t)
-
-        ;; enable paredit in your REPL
-        (add-hook 'cider-repl-mode-hook 'paredit-mode)
-
-        ;; Use clojure mode for other extensions
-        (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
-        (add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
-        (add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
-        (add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
-
-
-        ;; key bindings
-        ;; these help me out with the way I usually develop web apps
-        (defun cider-start-http-server ()
-          (interactive)
-          (cider-load-current-buffer)
-          (let ((ns (cider-current-ns)))
-            (cider-repl-set-ns ns)
-            (cider-interactive-eval (format "(println '(def server (%s/start))) (println 'server)" ns))
-            (cider-interactive-eval (format "(def server (%s/start)) (println server)" ns))))
-
-
-        (defun cider-refresh ()
-          (interactive)
-          (cider-interactive-eval (format "(user/reset)")))
-
-        (defun cider-user-ns ()
-          (interactive)
-          (cider-repl-set-ns "kwaku"))
-
-        (eval-after-load 'cider
-          '(progn
-             (define-key clojure-mode-map (kbd "C-c C-v") 'cider-start-http-server)
-             (define-key clojure-mode-map (kbd "C-M-r") 'cider-refresh)
-             (define-key clojure-mode-map (kbd "C-c u") 'cider-user-ns)
-             (define-key cider-mode-map (kbd "C-c u") 'cider-user-ns)))
       #+END_SRC
 *** JavaScript and CoffeeSript
 ***** [[https://indium.readthedocs.io/en/latest/index.html][Indium]] for JavaScript
@@ -843,6 +665,6 @@ buffer is not visiting a file."
     This is for using ert in excerisim tests. Since it's under "rapid
     development," it is loaded from its repo on the system
     #+BEGIN_SRC emacs-lisp
-      (load "~/repos/lisp/ert-it/ert-it.el")
+      ;(load "~/repos/lisp/ert-it/ert-it.el")
     #+END_SRC
 
