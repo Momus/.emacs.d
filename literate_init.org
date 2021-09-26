@@ -27,7 +27,11 @@
                    '("marmalade" . "http://marmalade-repo.org/packages/") t)
       (add-to-list 'package-archives 
                    '("org" . "http://orgmode.org/elpa/") t)
+      ;; Added by Package.el.  This must come before configurations of
+      ;; installed packages.  Don't delete this line.  If you don't want it,
+      ;; just comment it out by adding a semicolon to the start of the line.
       (package-initialize)
+
       (require 'use-package)
     #+END_SRC
     
@@ -824,7 +828,16 @@ buffer is not visiting a file."
 *** Prolog.  Yes prolog.
     #+BEGIN_SRC emacs-lisp
       ;; No, .pl is no longer Perl nor Poland.  It is Prolog
-      (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+      ;; (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+    #+END_SRC
+*** Python
+    #+BEGIN_SRC emacs-lisp
+      ;; Elpy, the Emacs Python IDE
+      ;; https://github.com/jorgenschaefer/elpy
+      (use-package elpy
+        :ensure t
+        :init
+        (elpy-enable))
     #+END_SRC
 * My Own Private Functions
 *** point-int

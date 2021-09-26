@@ -1,12 +1,14 @@
-alias sudo eshell/sudo $*
-alias ll ls -hl $*
-alias la ls -hla $*
-alias ff find-file $1
-alias emacs find-file $1
-alias d dired .
-alias gst git status
-alias gbr git branch
-alias v vagrant $1
-alias vc vagrant ssh -c  $1
-alias be bundle exec $*
+alias redecorate xprop -f _MOTIF_WM_HINTS 32c -set _MOTIF_WM_HINTS "0x2, 0x0, 0x1, 0x0, 0x0"
+alias dedecorate xprop -f _MOTIF_WM_HINTS 32c -set _MOTIF_WM_HINTS "0x2, 0x0, 0x0, 0x0, 0x0"
 alias ed ed -p\ℇ𝒟🚀  $*
+alias be bundle exec $*
+alias vc vagrant ssh -c  $1
+alias v vagrant $1
+alias gbr git branch
+alias gst git status
+alias d dired .
+alias emacs find-file $1
+alias ff find-file $1
+alias la ls -hla $*
+alias ll ls -hl $*
+alias sudo eshell/sudo $*
