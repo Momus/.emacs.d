@@ -346,6 +346,11 @@ buffer is not visiting a file."
          '(setf org-highlight-latex-and-related '(latex)))
       #+END_SRC
 
+    - This is now nessesary to enable the <s templating system
+      #+begin_src emacs-lisp
+        (require 'org-tempo)
+      #+end_src
+
 *** Exporting
     - The htmlize package makes source code pretty on export
       #+BEGIN_SRC emacs-lisp
