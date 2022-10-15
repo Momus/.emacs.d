@@ -540,18 +540,18 @@ buffer is not visiting a file."
         ;(require 'flycheck-ruby)
         (add-hook 'ruby-mode-hook 'flymake-ruby-load)
       #+END_SRC
-***** RVM 							    :keybind:
+***** RVM :disabled: 							    :keybind:
       #+BEGIN_SRC emacs-lisp
-        (require 'rvm)
+        ;(require 'rvm)
         ;; use rvm’s default ruby for the current Emacs session
-        (rvm-use-default)
+        ;(rvm-use-default)
         ;; Integrate RVM into my Ruby editing experience
         ;; http://devblog.avdi.org/2011/10/11/rvm-el-and-inf-ruby-emacs-reboot-14/
 
-        (add-hook 'ruby-mode-hook
-            (lambda () (rvm-activate-corresponding-ruby)))
+        ;(add-hook 'ruby-mode-hook
+        ;    (lambda () (rvm-activate-corresponding-ruby)))
 
-        (global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
+        ;(global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
         ;; Stolen from https://rejeep.github.io/emacs/elisp/ruby/2010/11/10/ruby-interpolation.html
 
         (defun ruby-interpolate ()
