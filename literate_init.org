@@ -861,6 +861,6 @@ buffer is not visiting a file."
     This is for using ert in excerisim tests. Since it's under "rapid
     development," it is loaded from its repo on the system
     #+BEGIN_SRC emacs-lisp
-      (load "~/repos/lisp/ert-it/ert-it.el")
+      ; (load "~/repos/lisp/ert-it/ert-it.el")
     #+END_SRC
 
