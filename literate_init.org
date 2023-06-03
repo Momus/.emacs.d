@@ -86,7 +86,7 @@
             (sml/apply-theme 'powerline))
           (sml/setup)
 	#+END_SRC
-***** Rich minority mode
+***** Rich minority mode  | [[disabled]]
       #+BEGIN_SRC emacs-lisp
         (rich-minority-mode 1)
       #+END_SRC
