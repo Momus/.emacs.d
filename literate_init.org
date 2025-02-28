@@ -422,7 +422,6 @@ buffer is not visiting a file."
        (use-package magit
          :ensure t)
       (require 'magit)
-      (setq ghub-github-token nil) 
     #+END_SRC
     
 
@@ -842,8 +841,7 @@ buffer is not visiting a file."
     #+begin_src emacs-lisp
       (flycheck-add-next-checker 'python-flake8 'python-pylint)
     #+end_src
-***** Elpy
-    Elpy is being weird, trying something else
+***** Elpy is being weird, trying something else
     #+BEGIN_SRC emacs-lisp
       ;; Elpy, the Emacs Python IDE
       ;; https://github.com/jorgenschaefer/elpy
@@ -852,36 +850,51 @@ buffer is not visiting a file."
     ;;    :init
     ;;  (elpy-enable))
     #+END_SRC
+***** Elpy
 ***** Python Black + A
     #+begin_src emacs-lisp
-(use-package python-black
-  :ensure t
-  :bind (("C-c b" . python-black-buffer)))
+      (use-package python-black
+        :ensure t
+        :bind (("C-c b" . python-black-buffer)))
 
-(use-package pyvenv
-  :ensure t
-  :config
-  (pyvenv-mode 1))
+      (use-package pyvenv
+        :ensure t
+        :config
+        (pyvenv-mode 1))
 
-(use-package anaconda-mode
-  :ensure t
-  :bind (("C-c C-x" . next-error))
-  :config
-  (require 'pyvenv)
-  (add-hook 'python-mode-hook 'anaconda-mode))
+      (use-package anaconda-mode
+        :ensure t
+        :bind (("C-c C-x" . next-error))
+        :config
+        (require 'pyvenv)
+        (add-hook 'python-mode-hook 'anaconda-mode))
 
-(use-package company-anaconda
-  :ensure t
-  :config
-  (eval-after-load "company"
-   '(add-to-list 'company-backends '(company-anaconda :with company-capf))))
+      (use-package company-anaconda
+        :ensure t
+        :config
+        (eval-after-load "company"
+         '(add-to-list 'company-backends '(company-anaconda :with company-capf))))
 
-(use-package highlight-indent-guides
-  :ensure t
-  :config
-  (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
-  (setq highlight-indent-guides-method 'character))
+      (use-package highlight-indent-guides
+        :ensure t
+        :config
+        (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
+        (setq highlight-indent-guides-method 'character))
 
+      (use-package pytest
+        :ensure t
+        :config
+        (add-hook 'python-mode-hook
+                (lambda ()
+                  (local-set-key "\C-ca" 'pytest-all)
+                  (local-set-key "\C-cm" 'pytest-module)
+                  (local-set-key "\C-c." 'pytest-one)
+                  (local-set-key "\C-cc" 'pytest-again)
+                  (local-set-key "\C-cd" 'pytest-directory)
+                  (local-set-key "\C-cpa" 'pytest-pdb-all)
+                  (local-set-key "\C-cpm" 'pytest-pdb-module)
+                  (local-set-key "\C-cp." 'pytest-pdb-one)))
+        )
     #+end_src
 
 * My Own Private Functions
