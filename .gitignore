@@ -30,3 +30,11 @@ places
 backups*
 /cider-history
 magithub/cache
+/.Rhistory
+/custom.el
+/eln-cache/
+/elpy/
+/history
+/oer-reveal-org/
+/request/
+/transient/

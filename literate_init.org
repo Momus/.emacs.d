@@ -419,9 +419,10 @@ buffer is not visiting a file."
 *** Basic Config
     If there is more to be done, remember to use-package
     #+BEGIN_SRC emacs-lisp
-      (use-package magit
-        :ensure t)
-     (require 'magit)
+       (use-package magit
+         :ensure t)
+      (require 'magit)
+      (setq ghub-github-token nil) 
     #+END_SRC
     
 
@@ -836,14 +837,53 @@ buffer is not visiting a file."
       ;; (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
     #+END_SRC
 *** Python
+***** [[https://emacs.stackexchange.com/questions/58097/how-to-enable-python-pylint-for-the-all-files-by-default][enable]] python-pylint for the all files by default
+    see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html][also]] 
+    #+begin_src emacs-lisp
+      (flycheck-add-next-checker 'python-flake8 'python-pylint)
+    #+end_src
+***** Elpy
+    Elpy is being weird, trying something else
     #+BEGIN_SRC emacs-lisp
       ;; Elpy, the Emacs Python IDE
       ;; https://github.com/jorgenschaefer/elpy
-      (use-package elpy
-        :ensure t
-        :init
-        (elpy-enable))
+    ;;  (use-package elpy
+    ;;    :ensure t
+    ;;    :init
+    ;;  (elpy-enable))
     #+END_SRC
+***** Python Black + A
+    #+begin_src emacs-lisp
+(use-package python-black
+  :ensure t
+  :bind (("C-c b" . python-black-buffer)))
+
+(use-package pyvenv
+  :ensure t
+  :config
+  (pyvenv-mode 1))
+
+(use-package anaconda-mode
+  :ensure t
+  :bind (("C-c C-x" . next-error))
+  :config
+  (require 'pyvenv)
+  (add-hook 'python-mode-hook 'anaconda-mode))
+
+(use-package company-anaconda
+  :ensure t
+  :config
+  (eval-after-load "company"
+   '(add-to-list 'company-backends '(company-anaconda :with company-capf))))
+
+(use-package highlight-indent-guides
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
+  (setq highlight-indent-guides-method 'character))
+
+    #+end_src
+
 * My Own Private Functions
 *** point-int
     Where are you in the buffer? point-int will tell you.
