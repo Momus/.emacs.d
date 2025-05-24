@@ -112,6 +112,10 @@
       (display-time-mode 1)
       #+END_SRC
    
+***** Yes-No- who needs them?
+      #+BEGIN_SRC 
+      (fset 'yes-or-no-p 'y-or-n-p)
+      #+END_SRC
 *** Set Frame Title
     #+BEGIN_SRC emacs-lisp
     (setq frame-title-format (concat (daemonp)  " | [%b]-Emacs" emacs-version))
@@ -499,10 +503,7 @@ buffer is not visiting a file."
           :ensure t)
         (global-flycheck-mode)
       #+END_SRC
-***** Yes-No- who needs them?
-      #+BEGIN_SRC 
-      (fset 'yes-or-no-p 'y-or-n-p)
-      #+END_SRC
+
 ***** Paredit for Scheme, CL, Clojure, and friends
       #+BEGIN_SRC emacs-lisp
         ;; More at http://www.emacswiki.org/emacs/ParEdit
