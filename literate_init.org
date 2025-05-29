@@ -491,20 +491,37 @@ buffer is not visiting a file."
                (if (= (user-uid) 0) "# " "$ "))))
     #+END_SRC
 * Language Independent
-***** [[https://github.com/bbatsov/projectile][Projectile]]
+*** LSP: Language Server Protocol
+    https://www.youtube.com/watch?v=E-NAM9U5JYE
+***** REM: Install language server for OS before trying!
+      The lines below are for reference:
+******* Fedora/Pyton
+        sudo dnf install python3-lsp-server
+***** Basic Config
+       #+begin_src emacs-lisp
+         (use-package lsp-mode
+           :commands (lsp lsp-deferred)
+           :init
+           (setq lsp-keymap-prefix "C-c l")
+           :config
+           (lsp-enable-which-key-integration t))
+       #+end_src
+
+       #+RESULTS:
+
+*** [[https://github.com/bbatsov/projectile][Projectile]]
       #+BEGIN_SRC emacs-lisp
         (use-package projectile
           :ensure t)
         (projectile-global-mode)
       #+END_SRC
-***** [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Flycheck]] is the now, as flymake seems caput.
+*** [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Flycheck]] is the now, as flymake seems caput.
       #+BEGIN_SRC emacs-lisp
         (use-package flycheck
           :ensure t)
         (global-flycheck-mode)
       #+END_SRC
-
-***** Paredit for Scheme, CL, Clojure, and friends
+*** Paredit for Scheme, CL, Clojure, and friends
       #+BEGIN_SRC emacs-lisp
         ;; More at http://www.emacswiki.org/emacs/ParEdit
         (use-package paredit
@@ -524,8 +541,7 @@ buffer is not visiting a file."
         (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
       #+END_SRC
 
-***** Prettify Symbols! It's time
-******* We want it everywhere!
+***** Prettify Symbols! It's time We want it everywhere!
         Alists are stored with in their language's section.
         #+BEGIN_SRC emacs-lisp
           (global-prettify-symbols-mode +1)
@@ -851,7 +867,6 @@ buffer is not visiting a file."
     ;;    :init
     ;;  (elpy-enable))
     #+END_SRC
-***** Elpy
 ***** Python Black + A
     #+begin_src emacs-lisp
       (use-package python-black
