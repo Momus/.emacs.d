@@ -6,7 +6,7 @@
 
 * General Settings
   Definitions found here apply to all emacs sessions.
-*** Personal Information
+** Personal Information
   #+NAME: literate_init.el
      #+BEGIN_SRC emacs-lisp :tangle yes
       (setq user-full-name "Dmitri G. Brengauz"
@@ -36,103 +36,124 @@
       (require 'use-package)
       (setq use-package-always-ensure t)
     #+END_SRC
-*** EMS Videos before letiterate.  Put everything in a big code block first
+** EMS Videos before letiterate.  Put everything in a big code block first
     #+begin_src emacs-lisp
-            ;; Thatks but no thanks:
-            (setq inhibit-startup-message t)
-            (scroll-bar-mode -1)  ;; I never even know they're there
-            (tool-bar-mode -1)    ;; toolbar seldom useful
-            (tooltip-mode -1)     ;; no tooltips
-            (set-fringe-mode 10)  ;; default is 8, so this isn't wild
-            (menu-bar-mode -1)    ;; it will still be there if you need it
-            (setq visible-bell t) ;; may be less anoying than a beep
-            (tab-bar-mode 1)
+      ;; Thatks but no thanks:
+      (setq inhibit-startup-message t)
+      (scroll-bar-mode -1)  ;; I never even know they're there
+      (tool-bar-mode -1)    ;; toolbar seldom useful
+      (tooltip-mode -1)     ;; no tooltips
+      (set-fringe-mode 10)  ;; default is 8, so this isn't wild
+      (menu-bar-mode -1)    ;; it will still be there if you need it
+      (setq visible-bell t) ;; may be less anoying than a beep
+      (tab-bar-mode 1)
 
             ;; get my desktop back
-            (desktop-save-mode t)
-            (setq desktop-save t)
+      (desktop-save-mode t)
+      (setq desktop-save t)
 
-            ;; make the escape key useful, even if one is used to C-g
-            (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+      ;; Useful hacks
 
-            (use-package command-log-mode
-              :config
-                  (global-command-log-mode)) ;; see what we did
-            ;; REM C-c o to open command log mode buffer
-
-            (column-number-mode)
-            (global-display-line-numbers-mode t)
-
-            ;; Disable line numbers for some modes
-            (dolist (mode '(org-mode-hook
-                            term-mode-hook
-                            shell-mode-hook
-                            eshell-mode-hook))
-              (add-hook mode (lambda () (display-line-numbers-mode 0))))
+      ;;remeber recent files to open quickly
+      (recentf-mode 1)
 
 
-            (use-package ivy
-              :diminish
-              :bind (("C-s" . swiper)
-                     :map ivy-minibuffer-map
-                     ("TAB" . ivy-alt-done)	
-                     ("C-l" . ivy-alt-done)
-                     :map ivy-switch-buffer-map
-                     ("C-d" . ivy-switch-buffer-kill)
-                     :map ivy-reverse-i-search-map
-                     ("C-d" . ivy-reverse-i-search-kill))
-              :config
+      ;;minibuffer prompt history
+      (setq history-length 25) ;;default of 100 is a bit much
+      (savehist-mode 1)
+
+
+      ;; Remeber and restore the last cursor location of opened files
+      (save-place-mode 1)
+
+      ;; Don't pop up OS dialogies when prompting
+      (setq use-dialog-box nil)
+
+      ;;Auto revert buffers for changed files
+      ;; It will prombt first for safety
+      (global-auto-revert-mode 1)
+
+      ;; make the escape key useful, even if one is used to C-g
+      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+      (use-package command-log-mode
+         :config
+         (global-command-log-mode)) ;; see what we did
+      ;; REM C-c o to open command log mode buffer
+
+      (column-number-mode)
+      (global-display-line-numbers-mode t)
+
+      ;; Disable line numbers for some modes
+      (dolist (mode '(org-mode-hook
+                       term-mode-hook
+                       shell-mode-hook
+                       eshell-mode-hook))
+        (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+      (use-package ivy
+        :diminish
+        :bind (("C-s" . swiper)
+               :map ivy-minibuffer-map
+               ("TAB" . ivy-alt-done)	
+               ("C-l" . ivy-alt-done)
+               :map ivy-switch-buffer-map
+               ("C-d" . ivy-switch-buffer-kill)
+               :map ivy-reverse-i-search-map
+               ("C-d" . ivy-reverse-i-search-kill))
+        :config
               (ivy-mode 1))
-            (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
+      (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
 
-            ;; Get some doc strings for keybindings
-            (use-package ivy-rich
-              :init
-              (ivy-rich-mode 1))
+       ;; Get some doc strings for keybindings
+       (use-package ivy-rich
+         :init
+         (ivy-rich-mode 1))
 
-            ;; counsel is pulled in with ivy, this is to configure bindings
-            (use-package counsel
-              :bind (("M-x" . counsel-M-x)
-                     ("C-x b" . counsel-ibuffer)
-                     ("C-x C-f" . counsel-find-file)
-                     :map minibuffer-local-map
-                     ("C-r" . 'counsel-minibuffer-history)))
+      ;; counsel is pulled in with ivy, this is to configure bindings
+      (use-package counsel
+        :bind (("M-x" . counsel-M-x)
+               ("C-x b" . counsel-ibuffer)
+               ("C-x C-f" . counsel-find-file)
+               :map minibuffer-local-map
+               ("C-r" . 'counsel-minibuffer-history)))
 
 
-            ;; for this to work and look cool, gt nerd-icons:
-            ;; https://emacs.stackexchange.com/questions/78276/strange-symbols-in-doom-modeline
-            ;; run M-x all-the-icons-install-fonts
-            (use-package all-the-icons)
-            (use-package doom-modeline
-              :ensure t
-              :init (doom-modeline-mode 1)
-              :custom ((doom-modeline-height 15)))
+      ;; for this to work and look cool, gt nerd-icons:
+      ;; https://emacs.stackexchange.com/questions/78276/strange-symbols-in-doom-modeline
+      ;; run M-x all-the-icons-install-fonts
+      (use-package all-the-icons)
+      (use-package doom-modeline
+        :ensure t
+        :init (doom-modeline-mode 1)
+        :custom ((doom-modeline-height 15)))
 
-            (use-package doom-themes
-              :init (load-theme 'doom-dracula t))
+      (use-package doom-themes
+        :init (load-theme 'doom-dracula t))
 
       (show-paren-mode 1)
       (setq show-paren-style 'expression)
 
-            (use-package rainbow-delimiters
-              :hook (prog-mode . rainbow-delimiters-mode))
+      (use-package rainbow-delimiters
+        :hook (prog-mode . rainbow-delimiters-mode))
 
 
-            (use-package which-key
-              :init (which-key-mode)
-              :diminish which-key-mode
-              :config
-              (setq which-key-idle-delay 1))
+      (use-package which-key
+        :init (which-key-mode)
+        :diminish which-key-mode
+        :config
+        (setq which-key-idle-delay 1))
 
-            (use-package helpful
-              :custom
-              (counsel-describe-function-function #'helpful-callable)
-              (counsel-describe-variable-function #'helpful-variable)
-              :bind
-              ([remap describe-function] . counsel-describe-function)
-              ([remap describe-command] . helpful-command)
-              ([remap describe-variable] . counsel-describe-variable)
-              ([remap describe-key] . helpful-key))
+      (use-package helpful
+        :custom
+        (counsel-describe-function-function #'helpful-callable)
+        (counsel-describe-variable-function #'helpful-variable)
+        :bind
+        ([remap describe-function] . counsel-describe-function)
+        ([remap describe-command] . helpful-command)
+        ([remap describe-variable] . counsel-describe-variable)
+        ([remap describe-key] . helpful-key))
     #+end_src
 *** hydra [[https://www.youtube.com/watch?v=xaZMwNELaJY][video 3]]
       #+begin_src emacs-lisp
@@ -183,7 +204,7 @@
        ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
        ;; (use-package forge)
      #+end_src
-*** org mode basics [[https://www.youtube.com/watch?v=VcgjTEa0kU4][video 5]]
+** org mode basics [[https://www.youtube.com/watch?v=VcgjTEa0kU4][video 5]]
    #+begin_src emacs-lisp
      ;; This is needed as of Org 9.2
             (defun efs/org-mode-setup ()
@@ -275,9 +296,62 @@ do this after I fifgure more things out
      (python . t)))
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
+
+  ;; Let babel edit source code blocks in the same window.
+  ;; This solves problems...
+  (setq org-src-window-setup 'current-window)
 #+end_src
 
-***  Build Your Own IDE with lsp-mode [[https://www.youtube.com/watch?v=E-NAM9U5JYE][video 8]]
+**  Build Your Own IDE with lsp-mode [[https://www.youtube.com/watch?v=E-NAM9U5JYE][video 8]]
 #+begin_src emacs-lisp
+  (use-package lsp-mode
+      :init
+      ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+      (setq lsp-keymap-prefix "C-c l")
+      :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+             (python-mode . lsp)
+             ;; if you want which-key integration
+             (lsp-mode . lsp-enable-which-key-integration))
+      :commands lsp)
+
+  ;; optionally
+  (use-package lsp-ui :commands lsp-ui-mode)
+  ;; if you are helm user
+  ;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+
+  ;; if you are ivy user
+  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  (use-package dap-mode)
+
+  ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+  ;; -> does not work (use-package dap-python)
+
+    ;; optional if you want which-key integration
+    (use-package which-key
+        :config
+        (which-key-mode))
+
+#+end_src
+
+*** Company Mode
+#+begin_src emacs-lisp
+  (use-package company
+    :after lsp-mode
+    :hook (prog-mode . company-mode)
+    :bind
+    (:map company-active-map
+          ("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+          ("<tab>" . company-indent-or-compile-common))
+
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
 
 #+end_src

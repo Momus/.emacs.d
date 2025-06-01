@@ -38,3 +38,6 @@ magithub/cache
 /oer-reveal-org/
 /request/
 /transient/
+/.cache/
+/.dap-breakpoints
+/.lsp-session-v1
