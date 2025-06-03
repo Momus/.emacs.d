@@ -41,3 +41,4 @@ magithub/cache
 /.cache/
 /.dap-breakpoints
 /.lsp-session-v1
+/anaconda-mode/

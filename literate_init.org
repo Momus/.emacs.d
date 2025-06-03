@@ -4,26 +4,25 @@
 #+DATE:        2016-03-15 Tue
 #+DESCRIPTION: Managing my .emacs the literate programming way with org-mode.
 
-* General Settings
-  Definitions found here apply to all emacs sessions.
+* Base configuration
 ** Personal Information
   #+NAME: literate_init.el
      #+BEGIN_SRC emacs-lisp :tangle yes
       (setq user-full-name "Dmitri G. Brengauz"
             user-mail-address "dmitri at momus dot net")
      #+END_SRC
-*** Load path
+** Load path
     #+BEGIN_SRC emacs-lisp
     (add-to-list 'load-path "~/.emacs.d/elisp/")    
     #+END_SRC
-*** Package Management
+** Package Management
     #+BEGIN_SRC emacs-lisp
       (require 'package)
       (setq package-archives
             '(("melpa" . "https://melpa.org/packages/")
-                     '("melpa-stable" . "https://stable.melpa.org/packages/")
-                   '("org" . "https://orgmode.org/elpa/")
-                   '("elpa" . "https://elpa.gnu.org/packages")))
+              '("melpa-stable" . "https://stable.melpa.org/packages/")
+              '("org" . "https://orgmode.org/elpa/")
+              '("elpa" . "https://elpa.gnu.org/packages")))
       (package-initialize)
 
       (unless package-archive-contents
@@ -36,126 +35,530 @@
       (require 'use-package)
       (setq use-package-always-ensure t)
     #+END_SRC
-** EMS Videos before letiterate.  Put everything in a big code block first
-    #+begin_src emacs-lisp
-      ;; Thatks but no thanks:
-      (setq inhibit-startup-message t)
-      (scroll-bar-mode -1)  ;; I never even know they're there
-      (tool-bar-mode -1)    ;; toolbar seldom useful
-      (tooltip-mode -1)     ;; no tooltips
-      (set-fringe-mode 10)  ;; default is 8, so this isn't wild
-      (menu-bar-mode -1)    ;; it will still be there if you need it
-      (setq visible-bell t) ;; may be less anoying than a beep
-      (tab-bar-mode 1)
+** Basic Enhancements
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+  (scroll-bar-mode -1)  ;; I never even know they're there
+  (tool-bar-mode -1)    ;; toolbar seldom useful
+  (tooltip-mode -1)     ;; no tooltips
+  (set-fringe-mode 10)  ;; default is 8, so this isn't wild
+  (menu-bar-mode -1)    ;; it will still be there if you need it
+  (setq visible-bell t) ;; may be less anoying than a beep
+  (setq use-dialog-box nil) ;; No pop up OS dialogues
 
-            ;; get my desktop back
-      (desktop-save-mode t)
-      (setq desktop-save t)
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
 
-      ;; Useful hacks
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+#+end_src
+** Useful hacks
+includes some hints from the  [[https://github.com/emacsmirror/better-defaults][better defaults]] package
+#+begin_src emacs-lisp
+  ;; focus follows mouse isn't just for Unix desktops
+  (setq mouse-autoselect-window t)
 
-      ;;remeber recent files to open quickly
-      (recentf-mode 1)
+  ;;remeber recent files to open quickly
+  (recentf-mode 1)
+
+  ;;minibuffer prompt history
+  (setq history-length 25) ;;default of 100 is a bit much
+  (savehist-mode 1)
+
+  ;; Remeber and restore the last cursor location of opened files
+  (save-place-mode 1)
+
+  ;;Auto revert buffers for changed files
+  ;; It will prombt first for safety
+  (global-auto-revert-mode 1)
+  (setq-default indent-tabs-mode nil)
+
+  (setq save-interprogram-paste-before-kill t
+        apropos-do-all t
+        mouse-yank-at-point t
+        require-final-newline t
+        load-prefer-newer t
+        backup-by-copying t
+        frame-inhibit-implied-resize t
+        read-file-name-completion-ignore-case t
+        read-buffer-completion-ignore-case t
+        completion-ignore-case t
+        )
+  (require 'uniquify)
+  (setq uniquify-buffer-name-style 'forward)
+
+  ;; Make the kill ring work with the OS clipboard
+  (setq ;; makes killing/yanking interact with the clipboard
+   x-select-enable-clipboard t
+ 
+   ;; I'm actually not sure what this does but it's recommended?
+   x-select-enable-primary t
+ 
+   ;; Save clipboard strings into kill ring before replacing them.
+   ;; When one selects something in another program to paste it into Emacs,
+   ;; but kills something in Emacs before actually pasting it,
+   ;; this selection is gone unless this variable is non-nil
+   save-interprogram-paste-before-kill t
+ 
+   ;; Shows all options when running apropos. For more info,
+   ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html
+   apropos-do-all t
+ 
+   ;; Mouse yank commands yank at point instead of at click.
+   mouse-yank-at-point t)
+
+  ;;Yes-No- who needs them?
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+** Parentheses
+#+begin_src emacs-lisp
+  (show-paren-mode 1)
+  (setq show-paren-style 'expression)
+  (setq show-paren-delay 0)
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+*** Paredit for Scheme, CL, Clojure, and friends
+#+BEGIN_SRC emacs-lisp
+  ;; More at http://www.emacswiki.org/emacs/ParEdit
+  (use-package paredit
+     :ensure t)
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+  (add-hook 'clojure-mode-hook          #'paredit-mode)
+  ;; eldoc-mode shows documentation in the minibuffer when writing code
+  ;; http://www.emacswiki.org/emacs/ElDoc
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+#+END_SRC
+
+** Prettify Symbols! It's time.  We want it everywhere!
+ Alists are stored with in their language's section.
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode +1)
+  (setq prettify-symbols-unprettify-at-point t)
+#+END_SRC
+** Tab bar
+#+begin_src emacs-lisp
+  (tab-bar-mode 1)
+#+end_src
+** Desktops
+#+begin_src emacs-lisp
+  (desktop-save-mode t)
+  (setq desktop-save t)
+#+end_src
+** Some better global keybindings
+#+begin_src emacs-lisp
+  ;; make the escape key useful, even if one is used to C-g
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+  ;;https://www.masteringemacs.org/article/text-expansion-hippie-expand
+  ;; should work on at least M-/
+  (global-set-key [remap dabbrev-expand] 'hippie-expand)
+  
+
+#+end_src
+** Client Server Labor Relations
+More will go here when I do more work with Emacs server
+*** Fix ido so it shares buffers amongst frames. [[http://stackoverflow.com/questions/27465616/emacsclient-will-not-allow-two-different-frames-to-have-the-same-file-open][Source]]
+#+BEGIN_SRC emacs-lisp
+  (setq ido-default-buffer-method 'selected-window)
+#+END_SRC
+* Appearance 
+** Windows (not frames)
+*** Buffer-move 
+        [[https://github.com/lukhas/buffer-move][buffer-move.el]] Move buffers around. This is taken from [[https://www.emacswiki.org/emacs/buffer-move.el][emacs-wiki]].
+        #+BEGIN_SRC emacs-lisp
+          (load "buffer-move.el")
+        #+END_SRC
+
+        We want current window to switch to previous buffer
+        instead of swapping buffers of both windows:
+        #+BEGIN_SRC emacs-lisp
+          (setq buffer-move-behavior 'move)
+        #+END_SRC
+********* Unseful key bindings:                                       :keybind:
+        #+BEGIN_SRC emacs-lisp
+          (global-set-key (kbd "<C-S-up>")     'buf-move-up)
+          (global-set-key (kbd "<C-S-down>")   'buf-move-down)
+          (global-set-key (kbd "<C-S-left>")   'buf-move-left)
+          (global-set-key (kbd "<C-S-right>")  'buf-move-right)
+          (global-set-key (kbd "<C-tab>")      'other-window)
+          ;; Keep C-tab in org-mode
+          (define-key org-mode-map (kbd "<C-tab>") 'other-window)
+        #+END_SRC
+
+*** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
+Does this work with doom modeline?  Not yet, I think
+      #+BEGIN_SRC emacs-lisp
+      ;Window Number Mode is now a package, does not need to be loaded.
+      (use-package window-number
+         :ensure t)
+      (require 'window-number)
+      (window-number-mode)
+      #+END_SRC
+
+*** Backups and Desktops
+***** Remember: add the backups directory to .gitignore
+        #+BEGIN_SRC emacs-lisp
+            (setq backup-directory-alist `(("." . ,(concat user-emacs-directory
+                    				           "backups"))))
+          (setq auto-save-default nil)
+          (setq create-lockfiles nil)
+        #+END_SRC
+***** Desktop directory should likewise be in .gitignore
+      #+BEGIN_SRC emacs-lisp
+        (desktop-save-mode 1)
+        (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
+      #+END_SRC
+
+***** Autocompletion better on than off.
+      Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
+      #+BEGIN_SRC emacs-lisp
+        (add-hook 'after-init-hook 'global-company-mode)
+        ;(with-eval-after-load 'company
+        ;  (add-to-list 'company-backends 'company-elm))
+      #+END_SRC
+***** Window number mode
+      Now installed from Melpa
+      #+BEGIN_SRC emacs-lisp
+        (require 'window-number)
+        (window-number-mode 1)
+        ;; Remaps the default window switch key to use window-number mode
+        (global-set-key "\C-xo"  'window-number-switch)
+        ;; Use the Meta key to switch between frames.
+        (window-number-meta-mode t)
+
+      #+END_SRC
+
+** Modeline
+Used to use Smart-modline, now playing with Doom.  My old "smart" config is saved here just in case
+*** Doom Modeline
+#+begin_src emacs-lisp
+       ;; for this to work and look cool, gt nerd-icons:
+          ;; https://emacs.stackexchange.com/questions/78276/strange-symbols-in-doom-modeline
+          ;; run M-x all-the-icons-install-fonts
+          (use-package all-the-icons)
+          (use-package doom-modeline
+            :ensure t
+            :init (doom-modeline-mode 1)
+            :custom ((doom-modeline-height 15)))
 
 
-      ;;minibuffer prompt history
-      (setq history-length 25) ;;default of 100 is a bit much
-      (savehist-mode 1)
+#+end_src
+***  [[https://github.com/Malabarba/smart-mode-line][Smart-mode-line]]
+- intalled package smart-mode-line-powerline-theme
+- configuration
+	#+BEGIN_SRC emacs-lisp
+
+          ;; (use-package smart-mode-line-powerline-theme
+          ;;   :ensure t)
 
 
-      ;; Remeber and restore the last cursor location of opened files
-      (save-place-mode 1)
+          ;; (use-package smart-mode-line
+          ;;   :ensure t
 
-      ;; Don't pop up OS dialogies when prompting
-      (setq use-dialog-box nil)
+          ;;   :init
+          ;;   (setq sml/vc-mode-show-backend t)
+          ;;   (setq sml/no-confirm-load-theme t)
+          ;;   (setq sml/shorten-directory t)
+          ;;   (setq sml/shorten-modes t) ; may interferes with Nyan Mode
+          ;;   (setq sml/name-width '40)
+          ;;   (setq sml/mode-width 'full)
 
-      ;;Auto revert buffers for changed files
-      ;; It will prombt first for safety
-      (global-auto-revert-mode 1)
+          ;;   :config
+          ;;   (sml/apply-theme 'powerline))
+          ;; (sml/setup)
+	#+END_SRC
+*** How about a nice clock?
+I used to want a clock, but now there are clocks everywhere, so I don't
+Kept this here in case I want one again
+#+BEGIN_SRC emacs-lisp
+  ;; (defface egoge-display-time
+  ;;   '((((type x w32 mac))
+  ;;      (:foreground "#060525" :inherit bold))
+  ;;     (((type tty))
+  ;;      (:foreground "blue")))
+  ;;   "Face used to display the time in the mode line.")
 
-      ;; make the escape key useful, even if one is used to C-g
-      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  ;; ;; This causes the current time in the mode line to be displayed in
+  ;; ;; `egoge-display-time-face' to make it stand out visually.
+  ;; ;; Clock is set to 24 hour mode and two | to act as separators with
+  ;; ;; the system load indicator
 
-      (use-package command-log-mode
-         :config
-         (global-command-log-mode)) ;; see what we did
-      ;; REM C-c o to open command log mode buffer
+  ;; (setq display-time-string-forms
+  ;;       '((propertize (concat 24-hours":"minutes"\|"load"\|"(daemonp))
+  ;;                     'face 'egoge-display-time)))
 
-      (column-number-mode)
-      (global-display-line-numbers-mode t)
+  ;; ;; This line has to be under the two functions above.  Execution order matters in Elisp.
+  ;; (display-time-mode 1)
+#+END_SRC
+   
+** Theme[s]
+#+begin_src emacs-lisp
+  (use-package doom-themes
+    :init (load-theme 'doom-dracula t))
+#+end_src
+** Set Frame Title
+    #+BEGIN_SRC emacs-lisp
+    (setq frame-title-format (concat (daemonp)  " | [%b]-Emacs" emacs-version))
+    #+END_SRC
+** Winner Mode Wins!
+For now---it doesn't break anything.  will revist when setting up doom modeline
+#+BEGIN_SRC emacs-lisp
+  (when (fboundp 'winner-mode) ;Compat test
+    (winner-mode 1))
+  ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
+  ;; have winner-mode.
+#+END_SRC
+* Org mode
+** basics [[https://www.youtube.com/watch?v=VcgjTEa0kU4][video 5]]
+   #+begin_src emacs-lisp
+     ;; This is needed as of Org 9.2
+     (defun efs/org-mode-setup ()
+       (org-indent-mode)
+       (variable-pitch-mode 1)
+       (auto-fill-mode 0) ;; try vis line instead for a while
+       (visual-line-mode 1))
 
-      ;; Disable line numbers for some modes
-      (dolist (mode '(org-mode-hook
-                       term-mode-hook
-                       shell-mode-hook
-                       eshell-mode-hook))
-        (add-hook mode (lambda () (display-line-numbers-mode 0))))
+     (defun efs/org-font-setup ()
+       ;; Replace list hyphen with dot
+       (font-lock-add-keywords 'org-mode
+            '(("^ *\\([-]\\) "
+            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+       ;; Set faces for heading levels
+       (dolist (face '((org-level-1 . 1.5)
+                       (org-level-2 . 1.4)
+                       (org-level-3 . 1.3)
+                       (org-level-4 . 1.2)
+                       (org-level-5 . 1.1)
+                       (org-level-6 . 1.1)
+                       (org-level-7 . 1.1)
+                       (org-level-8 . 1.1)))
+      ; (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
+         )
+
+       ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+       (set-face-attribute 'org-block nil :foreground  'unspecified :inherit 'fixed-pitch)
+       (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+       (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+       (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+       (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+       (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+       (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+     (use-package org
+       :hook (org-mode . efs/org-mode-setup)
+       :config
+       (setq org-ellipsis " ▾")
+       (efs/org-font-setup))
+
+     (use-package org-bullets
+       :after org
+       :hook (org-mode . org-bullets-mode)
+       ; :custom
+       ; (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+       )
+
+     (defun efs/org-mode-visual-fill ()
+       (setq visual-fill-column-width 110
+             visual-fill-column-center-text t)
+       (visual-fill-column-mode 1))
+
+     (use-package visual-fill-column
+       :hook (org-mode . efs/org-mode-visual-fill))
+
+     ;;https://github.com/emacsmirror/mixed-pitch
+     (use-package mixed-pitch
+       :hook
+       ;; If you want it in all text modes:
+       (text-mode . mixed-pitch-mode))
+#+end_src
+***   Highlight \LaTeX math mode in org mode.
+#+begin_src emacs-lisp
+  (eval-after-load 'org
+    '(setf org-highlight-latex-and-related '(latex)))
+#+end_src
+
+** TODO organize life with org [[https://www.youtube.com/watch?v=PNE-mgkZ6HM][video 6]]
+do this after I fifgure more things out
+#+begin_src emacs-lisp
+ ;; not in video, but this is to keep frames sane
+(setq org-agenda-window-setup 'current-window)
+#+end_src
+**  Org Babel [[https://www.youtube.com/watch?v=kkqVTDbfYp4][video 7]]
+#+begin_src emacs-lisp
+  ;; This is "insecture" but go with it for now:
+  (setq org-confirm-babel-evaluate nil
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (R      . t)
+     (shell  . t)
+     (ruby   . t)))
+
+  (push '("conf-unix" . conf-unix) org-src-lang-modes)
+
+  ;; Let babel edit source code blocks in the same window.
+  ;; This solves problems...
+  (setq org-src-window-setup 'current-window)
+#+end_src
+*** Quick Templates
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (add-to-list 'org-modules 'org-tempo t)
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+#+end_src
+** Exporting
+    - The htmlize package makes source code pretty on export
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t)
+  (require 'htmlize)
+#+END_SRC
+       - For Github Flavored Mardown, ox-gfm
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-gfm
+    :ensure t)
+  (eval-after-load "org"
+  '(require 'ox-gfm nil t))
+#+END_SRC
+** Capture
+We're not doing this right now.
+    - Replaces remember mode. Get stuff from your brain into org-mode
+      quick!
+      #+BEGIN_SRC emacs-lisp
+        ;; (setq org-default-notes-file (concat org-directory "/notes.org"))
+        ;; (define-key mode-specific-map [?a] 'org-agenda)
+
+        ;; (eval-after-load "org"
+        ;;   '(progn
+        ;;      (define-prefix-command 'org-todo-state-map)
+
+        ;;      (define-key org-mode-map "\C-cx" 'org-todo-state-map)
+
+        ;;      (define-key org-todo-state-map "x"
+        ;;        #'(lambda nil (interactive) (org-todo "CANCELLED")))
+        ;;      (define-key org-todo-state-map "d"
+        ;;        #'(lambda nil (interactive) (org-todo "DONE")))
+        ;;      (define-key org-todo-state-map "f"
+        ;;        #'(lambda nil (interactive) (org-todo "DEFERRED")))
+        ;;      (define-key org-todo-state-map "l"
+        ;;        #'(lambda nil (interactive) (org-todo "DELEGATED")))
+        ;;      (define-key org-todo-state-map "s"
+        ;;        #'(lambda nil (interactive) (org-todo "STARTED")))
+        ;;      (define-key org-todo-state-map "w"
+        ;;        #'(lambda nil (interactive) (org-todo "WAITING")))
+        ;;      (define-key org-agenda-mode-map "\C-n" 'next-line)
+        ;;      (define-key org-agenda-keymap "\C-n" 'next-line)
+        ;;      (define-key org-agenda-mode-map "\C-p" 'previous-line)
+        ;;      (define-key org-agenda-keymap "\C-p" 'previous-line)
+        ;;      )
+        ;;   )
+        ;; ;;https://lists.gnu.org/archive/html/emacs-orgmode/2008-07/msg00027.html]
+        ;; ;; an (easier and cleaner, I think) alternate way to achieve
+        ;; ;;this would be something like this:
+
+        ;; (setq org-use-fast-todo-selection t)
+        ;; (setq org-todo-keywords
+        ;;       '((sequence "TODO(t)"
+        ;;                   "STARTED(s)"
+        ;;                   "WAITING(w)"
+        ;;                   "DELEGATED(l)" "|"
+        ;;                   "DONE(d)"
+        ;;                   "DEFERRED(f)")))
+
+        ;; 
+      #+END_SRC
 
 
-      (use-package ivy
-        :diminish
-        :bind (("C-s" . swiper)
-               :map ivy-minibuffer-map
-               ("TAB" . ivy-alt-done)	
-               ("C-l" . ivy-alt-done)
-               :map ivy-switch-buffer-map
-               ("C-d" . ivy-switch-buffer-kill)
-               :map ivy-reverse-i-search-map
-               ("C-d" . ivy-reverse-i-search-kill))
-        :config
-              (ivy-mode 1))
-      (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
+* Utilities
+** [[https://github.com/magnars/expand-region.el][ Expand Region]]
+Really need to use this more. Semantic select for text, et c.
+All sorts of goodies can be found in the docs for er/* functions.
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+     :ensure t)
+  (global-set-key (kbd "C-=") 'er/expand-region)
+#+END_SRC
+**  Ivy and Counsel and friends
+#+begin_src emacs-lisp
+  (use-package ivy
+    :diminish
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)	
+           ("C-l" . ivy-alt-done)
+           :map ivy-switch-buffer-map
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
 
-       ;; Get some doc strings for keybindings
-       (use-package ivy-rich
-         :init
-         (ivy-rich-mode 1))
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq magit-completing-read-function 'ivy-completing-read)
 
-      ;; counsel is pulled in with ivy, this is to configure bindings
-      (use-package counsel
-        :bind (("M-x" . counsel-M-x)
-               ("C-x b" . counsel-ibuffer)
-               ("C-x C-f" . counsel-find-file)
-               :map minibuffer-local-map
-               ("C-r" . 'counsel-minibuffer-history)))
+  (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
 
-
-      ;; for this to work and look cool, gt nerd-icons:
-      ;; https://emacs.stackexchange.com/questions/78276/strange-symbols-in-doom-modeline
-      ;; run M-x all-the-icons-install-fonts
-      (use-package all-the-icons)
-      (use-package doom-modeline
-        :ensure t
-        :init (doom-modeline-mode 1)
-        :custom ((doom-modeline-height 15)))
-
-      (use-package doom-themes
-        :init (load-theme 'doom-dracula t))
-
-      (show-paren-mode 1)
-      (setq show-paren-style 'expression)
-
-      (use-package rainbow-delimiters
-        :hook (prog-mode . rainbow-delimiters-mode))
+  ;; Get some doc strings for keybindings
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1))
 
 
-      (use-package which-key
-        :init (which-key-mode)
-        :diminish which-key-mode
-        :config
-        (setq which-key-idle-delay 1))
+  ;; counsel is pulled in with ivy, this is to configure bindings
+  (use-package counsel
+    :bind (("M-x" . counsel-M-x)
+           ("C-x b" . counsel-ibuffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history)))
 
-      (use-package helpful
-        :custom
-        (counsel-describe-function-function #'helpful-callable)
-        (counsel-describe-variable-function #'helpful-variable)
-        :bind
-        ([remap describe-function] . counsel-describe-function)
-        ([remap describe-command] . helpful-command)
-        ([remap describe-variable] . counsel-describe-variable)
-        ([remap describe-key] . helpful-key))
-    #+end_src
-*** hydra [[https://www.youtube.com/watch?v=xaZMwNELaJY][video 3]]
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 1))
+
+  (use-package helpful
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key] . helpful-key))
+#+end_src
+**  Log commands
+#+begin_src emacs-lisp
+  (use-package command-log-mode
+     :config
+     (global-command-log-mode)) ;; see what we did
+  ;; REM C-c o to open command log mode buffer
+#+end_src
+** hydra [[https://www.youtube.com/watch?v=xaZMwNELaJY][video 3]]
       #+begin_src emacs-lisp
 	;; setup transient keybindings for repetative actions.
 	(use-package hydra)
@@ -168,8 +571,38 @@
 
 	(set-frame-parameter nil 'undecorated t)
      #+end_src
-*** projectile and magit [[https://www.youtube.com/watch?v=INTu30BHZGk][video 4]]
-**** projectile
+** magit
+#+begin_src emacs-lisp
+       (use-package magit)
+	 ;;:custom
+	 ;; do the diff in same window
+	 ;;(magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+	 
+
+       ;;  If I'm ever doing things wiht Github, look at this package again.
+       ;; NOTE: Make sure to configure a GitHub token before using this package!
+       ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+       ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+       ;; (use-package forge)
+#+end_src
+*** MagitHub
+This gives an error when loading, so remove for now until necessary
+Remember to isntall the [[https://hub.github.com/hub][hub]] package with your favorite package manager.
+    #+BEGIN_SRC emacs-lisp
+      ;; (use-package magithub
+      ;;              :ensure t
+      ;;              :after magit
+      ;;              :config 
+      ;;               (magithub-feature-autoinject t)
+      ;;               (setq magithub-clone-default-directory "~/repos"))
+    #+END_SRC
+
+*** Keybindings                                                     :keybind:
+    #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-x g") 'magit-status)
+    #+END_SRC
+* Emacs as an IDE
+** projectile from  [[https://www.youtube.com/watch?v=INTu30BHZGk][video 4]]
      [[https://docs.projectile.mx/projectile/index.html][project interaction library for Emacs]]
      create an empty .projectile file in project root
    #+begin_src emacs-lisp
@@ -188,121 +621,32 @@
 
      (use-package counsel-projectile
        :config (counsel-projectile-mode))
-
     #+end_src
-**** magit
-     #+begin_src emacs-lisp
-       (use-package magit)
-	 ;;:custom
-	 ;; do the diff in same window
-	 ;;(magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-	 
-
-       ;;  If I'm ever doing things wiht Github, look at this package again.
-       ;; NOTE: Make sure to configure a GitHub token before using this package!
-       ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-       ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-       ;; (use-package forge)
-     #+end_src
-** org mode basics [[https://www.youtube.com/watch?v=VcgjTEa0kU4][video 5]]
-   #+begin_src emacs-lisp
-     ;; This is needed as of Org 9.2
-            (defun efs/org-mode-setup ()
-              (org-indent-mode)
-              (variable-pitch-mode 1)
-              (auto-fill-mode 0) ;; try vis line instead for a while
-              (visual-line-mode 1))
-
-     (require 'org-tempo)
-     (add-to-list 'org-modules 'org-tempo t)
-     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-     (add-to-list 'org-structure-template-alist '("py" . "src python"))
-     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-
-
-
-
-            (defun efs/org-font-setup ()
-              ;; Replace list hyphen with dot
-              (font-lock-add-keywords 'org-mode
-                                      '(("^ *\\([-]\\) "
-                                         (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-              ;; Set faces for heading levels
-              (dolist (face '((org-level-1 . 1.5)
-                              (org-level-2 . 1.4)
-                              (org-level-3 . 1.3)
-                              (org-level-4 . 1.2)
-                              (org-level-5 . 1.1)
-                              (org-level-6 . 1.1)
-                              (org-level-7 . 1.1)
-                              (org-level-8 . 1.1)))
-                                             ; (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
-                )
-
-              ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-              (set-face-attribute 'org-block nil :foreground  'unspecified :inherit 'fixed-pitch)
-              (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-              (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-              (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-              (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-              (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-              (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
-
-     (use-package org
-       :hook (org-mode . efs/org-mode-setup)
-       :config
-       (setq org-ellipsis " ▾")
-       (efs/org-font-setup))
-
-     (use-package org-bullets
-       :after org
-       :hook (org-mode . org-bullets-mode)
-     ; :custom
-     ; (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
-       )
-
-     (defun efs/org-mode-visual-fill ()
-       (setq visual-fill-column-width 110
-             visual-fill-column-center-text t)
-       (visual-fill-column-mode 1))
-
-     (use-package visual-fill-column
-       :hook (org-mode . efs/org-mode-visual-fill))
-
-     ;;https://github.com/emacsmirror/mixed-pitch
-     (use-package mixed-pitch
-       :hook
-       ;; If you want it in all text modes:
-       (text-mode . mixed-pitch-mode))
-#+end_src
-
-*** TODO organize life with org [[https://www.youtube.com/watch?v=PNE-mgkZ6HM][video 6]]
-do this after I fifgure more things out
+** Company ( [[https://company-mode.github.io/][complete anything]])
 #+begin_src emacs-lisp
-    ;; not in video, but this is to keep frames sane
-  (setq org-agenda-window-setup 'current-window)
-  
+  (use-package company
+    :after lsp-mode
+    :hook (prog-mode . company-mode)
+    :bind
+    (:map company-active-map
+          ("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+          ("<tab>" . company-indent-or-compile-common))
+
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
 #+end_src
-
-***  Configure Everything with Org Babel [[https://www.youtube.com/watch?v=kkqVTDbfYp4][video 7]]
-#+begin_src emacs-lisp
-  ;; This is "insecture" but go with it for now:
-  (setq org-confirm-babel-evaluate nil)
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
-
-  (push '("conf-unix" . conf-unix) org-src-lang-modes)
-
-  ;; Let babel edit source code blocks in the same window.
-  ;; This solves problems...
-  (setq org-src-window-setup 'current-window)
-#+end_src
-
-**  Build Your Own IDE with lsp-mode [[https://www.youtube.com/watch?v=E-NAM9U5JYE][video 8]]
+** [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Flycheck]] is the now, as flymake seems caput.
+      #+BEGIN_SRC emacs-lisp
+        (use-package flycheck
+          :ensure t)
+        (global-flycheck-mode)
+      #+END_SRC
+**  lsp-mode [[https://www.youtube.com/watch?v=E-NAM9U5JYE][video 8]]
 #+begin_src emacs-lisp
   (use-package lsp-mode
       :init
@@ -333,25 +677,447 @@ do this after I fifgure more things out
     (use-package which-key
         :config
         (which-key-mode))
-
 #+end_src
 
-*** Company Mode
-#+begin_src emacs-lisp
-  (use-package company
-    :after lsp-mode
-    :hook (prog-mode . company-mode)
-    :bind
-    (:map company-active-map
-          ("<tab>" . company-complete-selection))
-    (:map lsp-mode-map
-          ("<tab>" . company-indent-or-compile-common))
+* Eshell and lesser shells
+** We start Eshell so much, it really needs its own keybinding     :keybind:
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-c e") 'eshell)
+    #+END_SRC
+** TODO Get rid of seperate Eshell file
+    #+BEGIN_SRC emacs-lisp
+      ;;This is so ehshell finds our alias files.
+      (setq eshell-directory-name "~/.emacs.d/eshell") 
 
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+      ;;This will fix crashing problems
+      ;; nyan-prompt plays badly with explicitly stating prompt. Try without.
+      ;;(setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
 
-  (use-package company-box
-    :hook (company-mode . company-box-mode))
+      ;;Load eshell-tramp module:
+      (require 'em-tramp) ; 
+      ;;  pcomplete-list better than the completion cycling. 
+      (setq eshell-cmpl-cycle-completions nil)
 
-#+end_src
+      ;;Enable password cashing
+      ;; Should also work for tramp
+      (setq password-cache t)
+
+      ;;Set password cash experation (in seconds)
+      (setq password-cache-expiry 3600)
+
+    #+END_SRC
+** Nyan prompt
+    Because why not? Because it break things. Save for later.
+    #+BEGIN_SRC emacs-lisp
+    ;(add-hook 'eshell-load-hook 'nyan-prompt-enable)
+    #+END_SRC
+** Simple prompt
+    Bash like prompt showing only sytem name and top directory.
+    #+BEGIN_SRC emacs-lisp
+      (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+            eshell-prompt-function
+            (lambda nil
+              (concat
+               "[" (car (split-string (system-name) "[\.]")) " "
+               (if (string= (eshell/pwd) (getenv "HOME"))
+                   "~" (eshell/basename (eshell/pwd)))
+               "]"
+               (if (= (user-uid) 0) "# " "$ "))))
+    #+END_SRC
+** [[ http://emacsredux.com/blog/2013/04/21/edit-files-as-root/][Sudo Edit]]
+does this work? not as i recall.  but visit it g
+#+BEGIN_SRC emacs-lisp
+  (defun sudo-edit (&optional arg)
+  ;;  "Edit currently visited file as root.
+  ;; With a prefix ARG prompt for a file to visit.
+  ;; Will also prompt for a file to visit if current
+  ;; buffer is not visiting a file."
+    (interactive "P")
+    (if (or arg (not buffer-file-name))
+        (find-file (concat "/sudo:root@localhost:"
+                           (ido-read-file-name "Find file(as root): ")))
+      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+  (global-set-key (kbd "C-x C-r") 'sudo-edit)
+#+END_SRC
+* [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html][Registers]]
+  These are highly personalizable, and should probaby be saved on a per-machine
+** This init file                                                  :keybind:
+    #+BEGIN_SRC emacs-lisp
+    (set-register ?e (cons 'file "~/.emacs.d/literate_init.org"))
+    #+END_SRC    
+
+* Language Specfic
+** Ruby and Rails
+    Most recentrly redone using [[https://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html][this tutorial]]
+*** Syntax Checking
+      Using [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][flycheck]] as flymake seems caput.
+      #+BEGIN_SRC emacs-lisp
+        ;(require 'flycheck-ruby)
+        (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+      #+END_SRC
+*** RVM :disabled:                                                :keybind:
+      #+BEGIN_SRC emacs-lisp
+        ;(require 'rvm)
+        ;; use rvm’s default ruby for the current Emacs session
+        ;(rvm-use-default)
+        ;; Integrate RVM into my Ruby editing experience
+        ;; http://devblog.avdi.org/2011/10/11/rvm-el-and-inf-ruby-emacs-reboot-14/
+
+        ;(add-hook 'ruby-mode-hook
+        ;    (lambda () (rvm-activate-corresponding-ruby)))
+
+        ;(global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
+        ;; Stolen from https://rejeep.github.io/emacs/elisp/ruby/2010/11/10/ruby-interpolation.html
+
+        (defun ruby-interpolate ()
+          "In a double quoted string, interpolate."
+                (interactive)
+                (insert "#")
+                (when (and
+                   (looking-back "\".*")
+                   (looking-at ".*\""))
+                  (insert "{}")
+                  (backward-char 1)))
+          ; (define-key ruby-mode-map (kbd "#") 'ruby-interpolate)
+
+      #+END_SRC
+*** [[https://github.com/bbatsov/rubocop-emacs][Rubocop]]
+      #+BEGIN_SRC emacs-lisp
+        (use-package rubocop
+           :ensure t)
+        (require 'rubocop)
+        (add-hook 'ruby-mode-hook #'rubocop-mode)
+      #+END_SRC
+*** inf-ruby
+      #+BEGIN_SRC emacs-lisp
+        (use-package inf-ruby
+          :ensure t)
+        ( add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+      #+END_SRC
+*** cucumber? why not.
+      #+BEGIN_SRC emacs-lisp
+        (use-package feature-mode
+          :ensure t)
+        (setq feature-default-language "en")
+        (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+      #+END_SRC
+** R (ESS)
+*** Basic Config
+      #+BEGIN_SRC emacs-lisp
+        (use-package ess
+          :ensure t
+          :init (require 'ess-site))
+        (add-hook 'ess-mode-hook #'rainbow-delimiters-mode)
+      #+END_SRC
+    
+      TODO: This should fix this [[https://github.com/jimhester/lintr/issues/79][bug]], but it dosen't
+      #+BEGIN_SRC emacs-lisp
+        (setq  flycheck-lintr-caching nil)
+      #+END_SRC
+*** Prettify Symbols! 
+      #+BEGIN_SRC emacs-lisp
+        (defvar R-prettify-alist '())
+        (add-to-list 'R-prettify-alist 
+                     '("%>%" , ?⟾))
+        ;;Someday ESS will have its own symbols alist, but that day is not
+        ;;today.
+        (append R-prettify-alist prettify-symbols-alist)
+      #+END_SRC
+
+** Java - emacs-eclim
+    Let's jump off the java bridge when we get to it again.
+    #+BEGIN_SRC emacs-lisp
+      ;(require 'eclim)
+      ;(add-hook 'java-mode-hook 'eclim-mode)
+
+      ;(setq eclimd-default-workspace '"~/usr/src/java/workspace")
+
+      ;(require 'eclimd)
+    #+END_SRC
+*** use company-mode with Eclim
+      #+BEGIN_SRC emacs-lisp
+        ;; Adjust Eclim for non-standard Eclipse directories.
+        ;(add-to-list 'eclim-eclipse-dirs '"~/usr/opt/eclipse")
+        ;(setq eclim-executable '"~/usr/opt/eclipse/eclim")
+        ;; Display compitation error messages in the echo area:
+        ;(setq help-at-pt-display-when-idle t)
+        ;(setq help-at-pt-timer-delay 0.1)
+        ;(help-at-pt-set-timer)
+
+        ;;Auto complete is through Company Mode
+        ;(require 'company-emacs-eclim)
+        ;(company-emacs-eclim-setup)
+      #+END_SRC
+
+** XML
+    Configured using [[https://fedoraproject.org/wiki/How_to_use_Emacs_for_XML_editing][this tutorial]]
+    Make sure all XMLis stuff is edited with nxml-mode
+    #+BEGIN_SRC emacs-lisp
+      (setq auto-mode-alist (cons '("\\.xml$" . nxml-mode) auto-mode-alist))
+      (setq auto-mode-alist (cons '("\\.xsl$" . nxml-mode) auto-mode-alist))
+      (setq auto-mode-alist (cons '("\\.xhtml$" . nxml-mode) auto-mode-alist))
+      (setq auto-mode-alist (cons '("\\.page$" . nxml-mode) auto-mode-alist))
+      (autoload 'xml-mode "nxml" "XML editing mode" t)
+
+      (eval-after-load 'rng-loc
+        '(add-to-list 'rng-schema-locating-files "~/.schema/schema.xml"))
+      (global-set-key [C-return] 'completion-at-point)
+    #+END_SRC
+
+** Common Lisp
+*** Point to the local SBCL installation
+      #+BEGIN_SRC emacs-lisp
+        (setq inferior-lisp-program "/home/kwaku/usr/bin/sbcl")
+        (setq slime-contribs '(slime-fancy))
+      #+END_SRC
+** Clojure
+*** Set up and configure the necessary packages.
+      #+BEGIN_SRC emacs-lisp
+      (use-package clojure-mode
+         :ensure t
+         )
+      (use-package cider
+         :ensure t)
+      #+END_SRC
+*** Prettify Symbols!
+      #+BEGIN_SRC emacs-lisp
+        (defvar clojure-prettify-alist '())
+        ;;http://endlessparentheses.com/using-prettify-symbols-in-clojure-and-elisp-without-breaking-indentation.html
+        (add-to-list 'clojure-prettify-alist
+                     '("<=" . (?· (Br . Bl) ?≤)))
+        (add-to-list 'clojure-prettify-alist
+                     '(">=" . (?· (Br . Bl) ?≥)))
+
+        ; ⇨, 🡒, or →
+        (add-to-list 'clojure-prettify-alist
+                     '("->" . (?\s (Br . Bl) ?\s (Bc . Bc) ?🠊)))
+        (add-to-list 'clojure-prettify-alist
+                     '("->>" . (?\s (Br . Bl) ?\s (Br . Bl) ?\s
+                                    (Bc . Br) ?🠊 (Bc . Bl) ?🠊)))
+
+        (eval-after-load 'clojure-mode
+          '(setq clojure-prettify-symbols-alist
+                 (append clojure-prettify-alist
+                         clojure--prettify-symbols-alist)))
+      #+END_SRC
+*** Stuff from  [[http://www.braveclojure.com/basic-emacs/][Brave Clojure]] that needs refactoring.
+      #+BEGIN_SRC emacs-lisp
+        ;; Enable paredit for Clojure
+        (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+
+        ;; This is useful for working with camel-case tokens, like names of
+        ;; Java classes (e.g. JavaClassName)
+        (add-hook 'clojure-mode-hook 'subword-mode)
+
+        ;; A little more syntax highlighting
+        ;;not working right now. Re-examine when dev with Clojure again.
+        ;(require 'clojure-mode-extra-font-locking)
+
+
+        ;; syntax hilighting for midje
+        (add-hook 'clojure-mode-hook
+                  (lambda ()
+                    (setq inferior-lisp-program "lein repl")
+                    (font-lock-add-keywords
+                     nil
+                     '(("(\\(facts?\\)"
+                        (1 font-lock-keyword-face))
+                   ("(\\(background?\\)"
+                        (1 font-lock-keyword-face))))
+                    (define-clojure-indent (fact 1))
+                    (define-clojure-indent (facts 1))))
+
+        ;;;;
+        ;; Cider
+        ;;;;
+
+        ;; provides minibuffer documentation for the code you're typing into the repl
+        (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+
+        ;; go right to the REPL buffer when it's finished connecting
+        (setq cider-repl-pop-to-buffer-on-connect t)
+
+        ;; When there's a cider error, show its buffer and switch to it
+        (setq cider-show-error-buffer t)
+        (setq cider-auto-select-error-buffer t)
+
+        ;; Where to store the cider history.
+        (setq cider-repl-history-file "~/.emacs.d/cider-history")
+
+        ;; Wrap when navigating history.
+        (setq cider-repl-wrap-history t)
+
+        ;; enable paredit in your REPL
+        (add-hook 'cider-repl-mode-hook 'paredit-mode)
+
+        ;; Use clojure mode for other extensions
+        (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+        (add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
+        (add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
+        (add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
+
+
+        ;; key bindings
+        ;; these help me out with the way I usually develop web apps
+        (defun cider-start-http-server ()
+          (interactive)
+          (cider-load-current-buffer)
+          (let ((ns (cider-current-ns)))
+            (cider-repl-set-ns ns)
+            (cider-interactive-eval (format "(println '(def server (%s/start))) (println 'server)" ns))
+            (cider-interactive-eval (format "(def server (%s/start)) (println server)" ns))))
+
+
+        (defun cider-refresh ()
+          (interactive)
+          (cider-interactive-eval (format "(user/reset)")))
+
+        (defun cider-user-ns ()
+          (interactive)
+          (cider-repl-set-ns "kwaku"))
+
+        (eval-after-load 'cider
+          '(progn
+             (define-key clojure-mode-map (kbd "C-c C-v") 'cider-start-http-server)
+             (define-key clojure-mode-map (kbd "C-M-r") 'cider-refresh)
+             (define-key clojure-mode-map (kbd "C-c u") 'cider-user-ns)
+             (define-key cider-mode-map (kbd "C-c u") 'cider-user-ns)))
+      #+END_SRC
+** JavaScript and CoffeeSript
+*** [[https://indium.readthedocs.io/en/latest/index.html][Indium]] for JavaScript
+**** Dependencies
+        [[https://developer.fedoraproject.org/tech/languages/nodejs/nodejs.html][Now]] on Fedora, nmp comes with nodejs
+        #+BEGIN_SRC sh :tangle no :dir /sudo:: :results value verbatim
+        sudo yum -y install nodejs 
+        #+END_SRC
+
+        #+RESULTS:
+        : Last metadata expiration check: 2:54:21 ago on Tue 25 Sep 2018 07:30:35 PM MDT.
+        : Dependencies resolved.
+        : Nothing to do.
+        : Complete!
+
+        Which is needed to install the indium server:
+        #+BEGIN_SRC sh :tangle no :dir /sudo:: :results value verbatim
+        npm install -g indium
+        #+END_SRC
+
+        #+RESULTS:
+        : /usr/bin/indium -> /usr/lib/node_modules/indium/bin/indium
+        : + indium@3.2.0
+        : added 10 packages in 2.151s
+
+**** Melpa Package
+        #+BEGIN_SRC emacs-lisp
+          (use-package indium
+            :ensure t
+            )
+          (add-hook 'js-mode-hook #'indium-interaction-mode)
+        #+END_SRC
+        IMPORTANT: Read the  [[https://indium.readthedocs.io/en/latest/setup.html][docs]] for project configuration information.
+
+        #+BEGIN_SRC emacs-lisp
+          ;; Trying Irindium. The setup below is for old JavaScript
+          ;; (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+          ;; (add-hook 'js-mode-hook 'subword-mode)
+          ;; (add-hook 'html-mode-hook 'subword-mode)
+          ;; (setq js-indent-level 2)
+          ;; (eval-after-load "sgml-mode"
+          ;;   '(progn
+          ;;      (require 'tagedit)
+          ;;      (tagedit-add-paredit-like-keybindings)
+          ;;      (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))))
+        #+END_SRC
+
+*** coffeescript
+        #+BEGIN_SRC emacs-lisp
+          (add-to-list 'auto-mode-alist '("\\.coffee.erb$" . coffee-mode))
+          (add-hook 'coffee-mode-hook 'subword-mode)
+          (add-hook 'coffee-mode-hook 'highlight-indentation-current-column-mode)
+          (add-hook 'coffee-mode-hook
+                    (defun coffee-mode-newline-and-indent ()
+                      (define-key coffee-mode-map "\C-j" 'coffee-newline-and-indent)
+                      (setq coffee-cleanup-whitespace nil)))
+          (custom-set-variables
+           '(coffee-tab-width 2))
+        #+END_SRC
+** CSS
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+    #+END_SRC
+** Prolog.  Yes prolog.
+    #+BEGIN_SRC emacs-lisp
+      ;; No, .pl is no longer Perl nor Poland.  It is Prolog
+      ;; (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+    #+END_SRC
+** Python
+*** [[https://emacs.stackexchange.com/questions/58097/how-to-enable-python-pylint-for-the-all-files-by-default][enable]] python-pylint for the all files by default
+    see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html][also]] 
+    #+begin_src emacs-lisp
+      (flycheck-add-next-checker 'python-flake8 'python-pylint)
+    #+end_src
+
+*** Python Black + A
+    #+begin_src emacs-lisp
+      (use-package python-black
+        :ensure t
+        :bind (("C-c b" . python-black-buffer)))
+
+      (use-package pyvenv
+        :ensure t
+        :config
+        (pyvenv-mode 1))
+
+      (use-package anaconda-mode
+        :ensure t
+        :bind (("C-c C-x" . next-error))
+        :config
+        (require 'pyvenv)
+        (add-hook 'python-mode-hook 'anaconda-mode))
+
+      (use-package company-anaconda
+        :ensure t
+        :config
+        (eval-after-load "company"
+         '(add-to-list 'company-backends '(company-anaconda :with company-capf))))
+
+      (use-package highlight-indent-guides
+        :ensure t
+        :config
+        (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
+        (setq highlight-indent-guides-method 'character))
+
+      (use-package pytest
+        :ensure t
+        :config
+        (add-hook 'python-mode-hook
+                (lambda ()
+                  (local-set-key "\C-ca" 'pytest-all)
+                  (local-set-key "\C-cm" 'pytest-module)
+                  (local-set-key "\C-c." 'pytest-one)
+                  (local-set-key "\C-cc" 'pytest-again)
+                  (local-set-key "\C-cd" 'pytest-directory)
+                  (local-set-key "\C-cpa" 'pytest-pdb-all)
+                  (local-set-key "\C-cpm" 'pytest-pdb-module)
+                  (local-set-key "\C-cp." 'pytest-pdb-one)))
+        )
+    #+end_src
+
+* My Own Private Functions
+** point-int
+    Where are you in the buffer? point-int will tell you.
+    #+BEGIN_SRC emacs-lisp
+      (defun point-int ()
+        "Return the point under the cursor.
+      Interactive wrapper for \\[point]"
+        (interactive)
+        (print (point)))
+    #+END_SRC
+** ert-it
+    This is for using ert in excerisim tests. Since it's under "rapid
+    development," it is loaded from its repo on the system
+    #+BEGIN_SRC emacs-lisp
+      ; (load "~/repos/lisp/ert-it/ert-it.el")
+    #+END_SRC
+    
