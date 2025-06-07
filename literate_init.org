@@ -3,7 +3,6 @@
 #+EMAIL:       dmitri at momus dot net
 #+DATE:        2016-03-15 Tue
 #+DESCRIPTION: Managing my .emacs the literate programming way with org-mode.
-
 * Base configuration
 ** Personal Information
   #+NAME: literate_init.el
@@ -18,23 +17,26 @@
 ** Package Management
     #+BEGIN_SRC emacs-lisp
       (require 'package)
-      (setq package-archives
-            '(("melpa" . "https://melpa.org/packages/")
-              '("melpa-stable" . "https://stable.melpa.org/packages/")
-              '("org" . "https://orgmode.org/elpa/")
-              '("elpa" . "https://elpa.gnu.org/packages")))
+
+      (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                               ("org" . "https://orgmode.org/elpa/")
+                               ("elpa" . "https://elpa.gnu.org/packages/")))
+
       (package-initialize)
 
-      (unless package-archive-contents
-        (package-refresh-contents))
+            (unless package-archive-contents
+              (package-refresh-contents))
 
-      ;; not sure this is 100% necessary, maybe for non-Linux systems
-      (unless (package-installed-p 'use-package)
-        (package-install 'use-package))
+            ;; not sure this is 100% necessary, maybe for non-Linux systems
+            (unless (package-installed-p 'use-package)
+              (package-install 'use-package))
 
-      (require 'use-package)
-      (setq use-package-always-ensure t)
+            (require 'use-package)
+            (setq use-package-always-ensure t)
+
+      (use-package compat) ;; seems to be ncessary atm
     #+END_SRC
+
 ** Basic Enhancements
 #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
@@ -190,6 +192,7 @@ More will go here when I do more work with Emacs server
           (setq buffer-move-behavior 'move)
         #+END_SRC
 ********* Unseful key bindings:                                       :keybind:
+in org mode files, these are currently overwritten.  living with it for now.
         #+BEGIN_SRC emacs-lisp
           (global-set-key (kbd "<C-S-up>")     'buf-move-up)
           (global-set-key (kbd "<C-S-down>")   'buf-move-down)
@@ -200,15 +203,6 @@ More will go here when I do more work with Emacs server
           (define-key org-mode-map (kbd "<C-tab>") 'other-window)
         #+END_SRC
 
-*** [[https://www.emacswiki.org/emacs/window-number.el][Window number!]]
-Does this work with doom modeline?  Not yet, I think
-      #+BEGIN_SRC emacs-lisp
-      ;Window Number Mode is now a package, does not need to be loaded.
-      (use-package window-number
-         :ensure t)
-      (require 'window-number)
-      (window-number-mode)
-      #+END_SRC
 
 *** Backups and Desktops
 ***** Remember: add the backups directory to .gitignore
@@ -223,24 +217,13 @@ Does this work with doom modeline?  Not yet, I think
         (desktop-save-mode 1)
         (add-to-list 'desktop-path  '"~/.emacs.d/desktops" )
       #+END_SRC
-
-***** Autocompletion better on than off.
-      Currently, we are experimenting with [[http://company-mode.github.io/][company-mode]]
-      #+BEGIN_SRC emacs-lisp
-        (add-hook 'after-init-hook 'global-company-mode)
-        ;(with-eval-after-load 'company
-        ;  (add-to-list 'company-backends 'company-elm))
-      #+END_SRC
 ***** Window number mode
       Now installed from Melpa
       #+BEGIN_SRC emacs-lisp
-        (require 'window-number)
-        (window-number-mode 1)
+        (use-package winum)
+        (winum-mode)
         ;; Remaps the default window switch key to use window-number mode
         (global-set-key "\C-xo"  'window-number-switch)
-        ;; Use the Meta key to switch between frames.
-        (window-number-meta-mode t)
-
       #+END_SRC
 
 ** Modeline
@@ -315,14 +298,7 @@ Kept this here in case I want one again
     #+BEGIN_SRC emacs-lisp
     (setq frame-title-format (concat (daemonp)  " | [%b]-Emacs" emacs-version))
     #+END_SRC
-** Winner Mode Wins!
-For now---it doesn't break anything.  will revist when setting up doom modeline
-#+BEGIN_SRC emacs-lisp
-  (when (fboundp 'winner-mode) ;Compat test
-    (winner-mode 1))
-  ;;the 'fboundup' function test for Emacsen (specifically XEmacs) that don't
-  ;; have winner-mode.
-#+END_SRC
+
 * Org mode
 ** basics [[https://www.youtube.com/watch?v=VcgjTEa0kU4][video 5]]
    #+begin_src emacs-lisp
@@ -340,7 +316,7 @@ For now---it doesn't break anything.  will revist when setting up doom modeline
             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
        ;; Set faces for heading levels
-       (dolist (face '((org-level-1 . 1.5)
+       (dolist (face '((org-level-1 . 2)
                        (org-level-2 . 1.4)
                        (org-level-3 . 1.3)
                        (org-level-4 . 1.2)
@@ -401,7 +377,7 @@ do this after I fifgure more things out
 #+end_src
 **  Org Babel [[https://www.youtube.com/watch?v=kkqVTDbfYp4][video 7]]
 #+begin_src emacs-lisp
-  ;; This is "insecture" but go with it for now:
+  ;; This is "insecure" but go with it for now:
   (setq org-confirm-babel-evaluate nil
         org-src-fontify-natively t
         org-src-tab-acts-natively t)
@@ -490,7 +466,6 @@ We're not doing this right now.
         ;; 
       #+END_SRC
 
-
 * Utilities
 ** [[https://github.com/magnars/expand-region.el][ Expand Region]]
 Really need to use this more. Semantic select for text, et c.
@@ -525,32 +500,49 @@ All sorts of goodies can be found in the docs for er/* functions.
   (use-package ivy-rich
     :init
     (ivy-rich-mode 1))
+  #+end_src
+-  Counsel :: a customized set of commands to replace `find-file` with
+  `counsel-find-file`, etc which provide useful commands for each of
+  the default completion commands.
+ #+begin_src emacs-lisp
+   ;; counsel is pulled in with ivy, this is to configure bindings
+   (use-package counsel
+     :bind (("M-x" . counsel-M-x)
+            ("C-x C-f" . counsel-find-file)
+            :map minibuffer-local-map
+            ("C-r" . 'counsel-minibuffer-history)))
 
+   (use-package which-key
+     :init (which-key-mode)
+     :diminish which-key-mode
+     :config
+     (setq which-key-idle-delay 1))
 
-  ;; counsel is pulled in with ivy, this is to configure bindings
-  (use-package counsel
-    :bind (("M-x" . counsel-M-x)
-           ("C-x b" . counsel-ibuffer)
-           ("C-x C-f" . counsel-find-file)
-           :map minibuffer-local-map
-           ("C-r" . 'counsel-minibuffer-history)))
-
-  (use-package which-key
-    :init (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 1))
-
-  (use-package helpful
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-    :bind
-    ([remap describe-function] . counsel-describe-function)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key))
-#+end_src
+   (use-package helpful
+     :custom
+     (counsel-describe-function-function #'helpful-callable)
+     (counsel-describe-variable-function #'helpful-variable)
+     :bind
+     ([remap describe-function] . counsel-describe-function)
+     ([remap describe-command] . helpful-command)
+     ([remap describe-variable] . counsel-describe-variable)
+     ([remap describe-key] . helpful-key))
+  #+end_src
+- prescient.el :: provides some helpful behavior for sorting Ivy
+  completion candidates based on how recently or frequently you select
+  them. This can be especially helpful when using M-x to run commands
+  that you don’t have bound to a key but still need to access
+  occasionally.
+ #+begin_src emacs-lisp
+   (use-package ivy-prescient
+     :after counsel
+     :custom
+     (ivy-prescient-enable-filtering nil)
+     :config
+     ;; Uncomment the following line to have sorting remembered across sessions!
+     (prescient-persist-mode 1)
+     (ivy-prescient-mode 1))
+ #+end_src
 **  Log commands
 #+begin_src emacs-lisp
   (use-package command-log-mode
@@ -631,7 +623,7 @@ Remember to isntall the [[https://hub.github.com/hub][hub]] package with your fa
     (:map company-active-map
           ("<tab>" . company-complete-selection))
     (:map lsp-mode-map
-          ("<tab>" . company-indent-or-compile-common))
+          ("<tab>" . company-indent-or-complete-common))
 
     :custom
     (company-minimum-prefix-length 1)
@@ -649,15 +641,16 @@ Remember to isntall the [[https://hub.github.com/hub][hub]] package with your fa
 **  lsp-mode [[https://www.youtube.com/watch?v=E-NAM9U5JYE][video 8]]
 #+begin_src emacs-lisp
   (use-package lsp-mode
-      :init
-      ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-      (setq lsp-keymap-prefix "C-c l")
-      :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-             (python-mode . lsp)
-             ;; if you want which-key integration
-             (lsp-mode . lsp-enable-which-key-integration))
-      :commands lsp)
-
+    :demand t
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (python-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
+  
   ;; optionally
   (use-package lsp-ui :commands lsp-ui-mode)
   ;; if you are helm user
@@ -754,7 +747,7 @@ does this work? not as i recall.  but visit it g
       Using [[http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][flycheck]] as flymake seems caput.
       #+BEGIN_SRC emacs-lisp
         ;(require 'flycheck-ruby)
-        (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+        ;(add-hook 'ruby-mode-hook 'flymake-ruby-load)
       #+END_SRC
 *** RVM :disabled:                                                :keybind:
       #+BEGIN_SRC emacs-lisp
@@ -785,22 +778,24 @@ does this work? not as i recall.  but visit it g
 *** [[https://github.com/bbatsov/rubocop-emacs][Rubocop]]
       #+BEGIN_SRC emacs-lisp
         (use-package rubocop
-           :ensure t)
+          :ensure t
+          :defer t)
         (require 'rubocop)
         (add-hook 'ruby-mode-hook #'rubocop-mode)
       #+END_SRC
 *** inf-ruby
       #+BEGIN_SRC emacs-lisp
-        (use-package inf-ruby
-          :ensure t)
-        ( add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+                (use-package inf-ruby
+                  :ensure t
+                  :defer t)
+                ( add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
       #+END_SRC
 *** cucumber? why not.
       #+BEGIN_SRC emacs-lisp
-        (use-package feature-mode
-          :ensure t)
-        (setq feature-default-language "en")
-        (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+        ;; (use-package feature-mode
+        ;;   :ensure t)
+        ;; (setq feature-default-language "en")
+        ;; (add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
       #+END_SRC
 ** R (ESS)
 *** Basic Config
@@ -1053,7 +1048,7 @@ does this work? not as i recall.  but visit it g
     #+END_SRC
 ** Python
 *** [[https://emacs.stackexchange.com/questions/58097/how-to-enable-python-pylint-for-the-all-files-by-default][enable]] python-pylint for the all files by default
-    see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html][also]] 
+    see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html][also]]
     #+begin_src emacs-lisp
       (flycheck-add-next-checker 'python-flake8 'python-pylint)
     #+end_src
@@ -1086,7 +1081,13 @@ does this work? not as i recall.  but visit it g
         :ensure t
         :config
         (add-hook 'python-mode-hook 'highlight-indent-guides-mode)
-        (setq highlight-indent-guides-method 'character))
+        (setq highlight-indent-guides-method 'bitmap)
+              
+        :custom
+        (setq highlight-indent-guides-responsive 'stack
+              highlight-indent-guides-bitmap 'line
+        ))
+
 
       (use-package pytest
         :ensure t
@@ -1120,4 +1121,3 @@ does this work? not as i recall.  but visit it g
     #+BEGIN_SRC emacs-lisp
       ; (load "~/repos/lisp/ert-it/ert-it.el")
     #+END_SRC
-    
